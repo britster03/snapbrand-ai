@@ -1,0 +1,79 @@
+{
+  "configuration": {
+    "basic_config": {
+      "aws_region": true,
+      "bedrock_model_id": true,
+      "s3_bucket": true,
+      "app_name": true,
+      "cors_origins": true,
+      "rate_limits": true
+    },
+    "aws_credentials": {
+      "access_key": false,
+      "secret_key": false,
+      "session_token": false,
+      "env_vars": false
+    },
+    "debug_mode": false,
+    "api_keys_count": 0
+  },
+  "services": {
+    "bedrock": {
+      "status": "unhealthy",
+      "error": "Unable to locate credentials"
+    },
+    "s3": {
+      "status": "unhealthy",
+      "error": "Unable to locate credentials"
+    }
+  },
+  "security": {
+    "checks": {
+      "api_keys_configured": false,
+      "cors_configured": true,
+      "rate_limiting": true,
+      "debug_disabled": true,
+      "secure_headers": true
+    },
+    "score": 0.8
+  },
+  "pricing": {
+    "model_pricing": {
+      "model_id": "stability.stable-diffusion-xl-v1",
+      "base_cost_per_image": 0.04,
+      "currency": "USD",
+      "size_multipliers": {
+        "512x512": 1.0,
+        "768x768": 1.0,
+        "1024x1024": 1.0,
+        "1152x896": 1.5,
+        "1216x832": 1.5,
+        "1344x768": 1.5,
+        "1536x640": 1.5
+      },
+      "notes": "Pricing based on AWS Bedrock official rates"
+    },
+    "test_calculations": {
+      "single_image": 0.04,
+      "batch_10": 0.4,
+      "large_size": 0.06
+    },
+    "pricing_realistic": true
+  },
+  "storage": {
+    "batch_storage_dir": "/Users/ronitvirwani/Downloads/snapbrand-ai/backend/batch_jobs",
+    "directory_exists": true,
+    "directory_writable": true,
+    "save_load_test": "passed"
+  },
+  "overall": {
+    "status": "failed",
+    "issues": [
+      "Bedrock connectivity failed: Unable to locate credentials",
+      "S3 connectivity failed: Unable to locate credentials"
+    ],
+    "warnings": [
+      "No API keys configured - service is open"
+    ]
+  }
+}
