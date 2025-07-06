@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     bedrock_model_id: str = Field(
         "stability.stable-diffusion-xl-v1", env="BEDROCK_MODEL_ID"
     )
-    s3_bucket: str = Field("snapbrand-assets", env="S3_BUCKET_NAME")
+    s3_bucket: str = Field("snapbrandassets", env="S3_BUCKET_NAME")
 
     # Optional explicit credentials (prefer IAM role when deployed on AWS)
     aws_access_key_id: Optional[str] = Field(None, env="AWS_ACCESS_KEY_ID")
