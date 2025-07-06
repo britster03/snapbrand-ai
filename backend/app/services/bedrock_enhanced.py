@@ -54,6 +54,8 @@ class EnhancedBedrockService:
         guidance_scale: float = 7.5,
         seed: Optional[int] = None,
         size: str = "1024x1024",
+        style_preset: str = "photographic",
+        **kwargs: Any,
     ) -> Dict[str, Any]:
         """Build payload for Stable Diffusion XL model."""
         payload: Dict[str, Any] = {
@@ -61,7 +63,7 @@ class EnhancedBedrockService:
             "cfg_scale": guidance_scale,
             "steps": 50,
             "samples": num_images,
-            "style_preset": "photographic",
+            "style_preset": style_preset,
             "width": int(size.split("x")[0]),
             "height": int(size.split("x")[1]),
         }
@@ -79,25 +81,57 @@ class EnhancedBedrockService:
         guidance_scale: float = 7.5,
         seed: Optional[int] = None,
         size: str = "1024x1024",
+        quality: str = "standard",
+        **kwargs: Any,
     ) -> Dict[str, Any]:
-        """Build payload for Titan Image Generator model."""
+        """Build payload for Titan Image Generator V2 model."""
         width, height = map(int, size.split("x"))
         
+        # Titan V2 supported sizes - must match exactly
+        supported_sizes = {
+            (1024, 1024), (768, 768), (512, 512),  # 1:1
+            (768, 1152), (384, 576),  # 2:3
+            (1152, 768), (576, 384),  # 3:2
+            (768, 1280), (384, 640),  # 3:5
+            (1280, 768), (640, 384),  # 5:3
+            (896, 1152), (448, 576),  # 7:9
+            (1152, 896), (576, 448),  # 9:7
+            (768, 1408), (384, 704),  # 6:11
+            (1408, 768), (704, 384),  # 11:6
+            (640, 1408), (320, 704),  # 5:11
+            (1408, 640), (704, 320),  # 11:5
+            (1152, 640),  # 9:5
+            (1173, 640),  # 16:9
+        }
+        
+        if (width, height) not in supported_sizes:
+            # Find closest supported size
+            closest_size = min(supported_sizes, 
+                             key=lambda s: abs(s[0] - width) + abs(s[1] - height))
+            logger.warning(f"Size {size} not supported by Titan V2, using closest: {closest_size[0]}x{closest_size[1]}")
+            width, height = closest_size
+        
+        # Titan V2 supports quality levels: standard, premium
+        # and better prompt adherence
         payload: Dict[str, Any] = {
             "taskType": "TEXT_IMAGE",
             "textToImageParams": {
                 "text": prompt,
-                "negativeText": negative_prompt or "",
             },
             "imageGenerationConfig": {
                 "numberOfImages": num_images,
-                "quality": "standard",
+                "quality": quality,
                 "cfgScale": guidance_scale,
                 "height": height,
                 "width": width,
                 "seed": seed or 0,
             }
         }
+        
+        # Add negative prompt if provided
+        if negative_prompt:
+            payload["textToImageParams"]["negativeText"] = negative_prompt
+            
         return payload
 
     def _parse_stable_diffusion_response(self, response_body) -> List[bytes]:
@@ -125,21 +159,26 @@ class EnhancedBedrockService:
         return images
 
     def _parse_titan_response(self, response_body) -> List[bytes]:
-        """Parse Titan Image Generator response."""
+        """Parse Titan Image Generator V2 response."""
         response_json = response_body.read()
         if not response_json:
             raise RuntimeError("Empty response from Bedrock model")
 
         data: Dict[str, Any] = json.loads(response_json)
+        
+        # Titan V2 response format: {"images": ["base64string1", "base64string2"]}
         results = data.get("images", [])
         if not results:
             raise RuntimeError("No images in Bedrock response")
 
         images: List[bytes] = []
         for image_data in results:
-            b64_image = image_data.get("base64")
-            if b64_image:
-                images.append(b64decode(b64_image))
+            # In Titan V2, each image is a direct base64 string
+            if isinstance(image_data, str):
+                images.append(b64decode(image_data))
+            elif isinstance(image_data, dict) and "base64" in image_data:
+                # Fallback for older format
+                images.append(b64decode(image_data["base64"]))
         
         return images
 

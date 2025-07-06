@@ -19,6 +19,16 @@ export interface GenerateRequest {
   lighting?: string;
 }
 
+export interface VectorGenerateRequest {
+  prompt: string;
+  negative_prompt?: string;
+  num_images?: number;
+  size?: string;
+  style?: string;
+  seed?: number;
+  format?: 'svg' | 'base64';
+}
+
 export interface GeneratedImage {
   id: string;
   s3_url: string;
@@ -31,6 +41,25 @@ export interface GeneratedImage {
 
 export interface GenerateResponse {
   images: GeneratedImage[];
+  total_cost?: number;
+  processing_time?: number;
+}
+
+export interface GeneratedVector {
+  id: string;
+  svg_content?: string;
+  svg_base64?: string;
+  s3_url?: string;
+  presigned_url?: string;
+  prompt: string;
+  size: string;
+  style: string;
+  created_at: string;
+  metadata?: Record<string, any>;
+}
+
+export interface VectorGenerateResponse {
+  vectors: GeneratedVector[];
   total_cost?: number;
   processing_time?: number;
 }
@@ -229,6 +258,18 @@ class ApiClient {
 
   async getGenerationStatus(): Promise<Record<string, any>> {
     return this.request('/v1/generate/status');
+  }
+
+  // Vector Image Generation
+  async generateVectorImages(request: VectorGenerateRequest): Promise<VectorGenerateResponse> {
+    return this.request('/v1/vector/generate', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getVectorHealth(): Promise<Record<string, any>> {
+    return this.request('/v1/vector/health');
   }
 
   // Templates

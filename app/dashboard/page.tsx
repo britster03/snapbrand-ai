@@ -240,6 +240,18 @@ export default function Dashboard() {
                   Templates
                 </Button>
               </li>
+              <li>
+                <Button
+                  variant={activeTab === "vector-generate" ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  asChild
+                >
+                  <Link href="/dashboard/vector-generate">
+                    <Palette className="w-4 h-4 mr-2" />
+                    Vector Images
+                  </Link>
+                </Button>
+              </li>
             </ul>
           </nav>
         </aside>

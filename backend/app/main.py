@@ -13,6 +13,7 @@ from .routes.templates import router as templates_router
 from .routes.batch import router as batch_router
 from .routes.auth import router as auth_router
 from .routes.images import router as images_router
+from .routes.vector import router as vector_router
 from .models.database import init_db
 
 settings = Settings()
@@ -56,6 +57,7 @@ app.include_router(assets_router)
 app.include_router(templates_router)
 app.include_router(batch_router)
 app.include_router(images_router)
+app.include_router(vector_router)
 
 
 @app.get("/health", tags=["health"])

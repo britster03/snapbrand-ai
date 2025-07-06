@@ -59,7 +59,7 @@ TEMPLATES = [
         description="Wide format header image for email campaigns",
         prompt_template="Email header banner design for {subject}, {brand_style} aesthetic, {color_scheme} color palette, clean graphic design, marketing banner, email header layout, wide banner format",
         negative_prompt="text overlay, cluttered, low resolution, storefront, building, people, products, photography, realistic objects, 3D objects",
-        default_size="1600x320",
+        default_size="1408x640",
         parameters={
             "brand_style": "modern and professional",
             "color_scheme": "brand colors",
@@ -73,7 +73,7 @@ TEMPLATES = [
         description="Hero banner for website homepage",
         prompt_template="Website hero banner featuring {subject}, {brand_style} design, {color_scheme}, modern web design aesthetic",
         negative_prompt="text, buttons, navigation elements, low quality",
-        default_size="1920x640",
+        default_size="1408x640",
         parameters={
             "brand_style": "clean and modern",
             "color_scheme": "brand palette",
@@ -187,7 +187,7 @@ PROFESSIONAL_TEMPLATES = [
         "description": "Professional email marketing headers with leading lines composition",
         "prompt_template": "Professional email marketing header banner design for {campaign_theme}, {call_to_action}, clean graphic design, marketing banner, email header layout, professional typography space, modern design aesthetic, wide banner format",
         "negative_prompt": "amateur, poor email design, low quality, unprofessional, cluttered, storefront, building, people, products, photography, realistic objects, 3D objects",
-        "default_size": "1600x320",
+        "default_size": "1408x640",
         "parameters": {
             "campaign_theme": "Campaign theme",
             "call_to_action": "Main call to action"

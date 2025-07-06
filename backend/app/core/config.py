@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # AWS Configuration
     aws_region: str = Field("us-east-1", env="AWS_REGION")
     bedrock_model_id: str = Field(
-        "stability.stable-diffusion-xl-v1", env="BEDROCK_MODEL_ID"
+        "amazon.titan-image-generator-v2:0", env="BEDROCK_MODEL_ID"
     )
     s3_bucket: str = Field("snapbrandassets", env="S3_BUCKET_NAME")
 
@@ -45,6 +45,12 @@ class Settings(BaseSettings):
     # Bedrock Configuration
     max_images_per_request: int = Field(10, env="MAX_IMAGES_PER_REQUEST")
     default_image_size: str = Field("1024x1024", env="DEFAULT_IMAGE_SIZE")
+    
+    # Vector Engine Configuration
+    vector_engine_enabled: bool = Field(True, env="VECTOR_ENGINE_ENABLED")
+    vector_engine_model_id: str = Field("amazon.titan-image-generator-v2:0", env="VECTOR_ENGINE_MODEL_ID")
+    max_vectors_per_request: int = Field(10, env="MAX_VECTORS_PER_REQUEST")
+    default_vector_size: str = Field("512x512", env="DEFAULT_VECTOR_SIZE")
     
     # Database
     database_url: str = Field("sqlite:///./snapbrand.db", env="DATABASE_URL")

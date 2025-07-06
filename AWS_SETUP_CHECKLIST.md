@@ -84,7 +84,7 @@
 
 ### 2. Verify Model Access
 - [ ] Run: `aws bedrock list-foundation-models --region us-east-1`
-- [ ] Confirm `stability.stable-diffusion-xl-v1` is available
+- [ ] Confirm `amazon.titan-image-generator-v2:0` is available
 
 ## ⚙️ Environment Configuration
 
@@ -101,7 +101,7 @@ AWS_SECRET_ACCESS_KEY=your_secret_key_here
 AWS_SESSION_TOKEN=your_session_token_here  # Optional
 
 # Bedrock Configuration
-BEDROCK_MODEL_ID=stability.stable-diffusion-xl-v1
+BEDROCK_MODEL_ID=amazon.titan-image-generator-v2:0
 
 # S3 Configuration
 S3_BUCKET_NAME=your-bucket-name-here

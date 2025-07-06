@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from base64 import b64decode
 from typing import Any, Dict, List, Optional
 
@@ -53,20 +54,56 @@ class BedrockService:
         guidance_scale: float = 7.5,
         seed: Optional[int] = None,
         size: str = "1024x1024",
+        quality: str = "standard",
+        **kwargs: Any,
     ) -> Dict[str, Any]:
-        payload: Dict[str, Any] = {
-            "text_prompts": [{"text": prompt, "weight": 1.0}],
-            "cfg_scale": guidance_scale,
-            "steps": 50,
-            "samples": num_images,
-            "style_preset": "photographic",
-            "width": int(size.split("x")[0]),
-            "height": int(size.split("x")[1]),
+        """Build payload for Titan Image Generator V2 model."""
+        width, height = map(int, size.split("x"))
+        
+        # Titan V2 supported sizes - must match exactly
+        supported_sizes = {
+            (1024, 1024), (768, 768), (512, 512),  # 1:1
+            (768, 1152), (384, 576),  # 2:3
+            (1152, 768), (576, 384),  # 3:2
+            (768, 1280), (384, 640),  # 3:5
+            (1280, 768), (640, 384),  # 5:3
+            (896, 1152), (448, 576),  # 7:9
+            (1152, 896), (576, 448),  # 9:7
+            (768, 1408), (384, 704),  # 6:11
+            (1408, 768), (704, 384),  # 11:6
+            (640, 1408), (320, 704),  # 5:11
+            (1408, 640), (704, 320),  # 11:5
+            (1152, 640),  # 9:5
+            (1173, 640),  # 16:9
         }
+        
+        if (width, height) not in supported_sizes:
+            # Find closest supported size
+            closest_size = min(supported_sizes, 
+                             key=lambda s: abs(s[0] - width) + abs(s[1] - height))
+            logger.warning(f"Size {size} not supported by Titan V2, using closest: {closest_size[0]}x{closest_size[1]}")
+            width, height = closest_size
+        
+        # Titan V2 payload structure
+        payload: Dict[str, Any] = {
+            "taskType": "TEXT_IMAGE",
+            "textToImageParams": {
+                "text": prompt,
+            },
+            "imageGenerationConfig": {
+                "numberOfImages": num_images,
+                "quality": quality,
+                "cfgScale": guidance_scale,
+                "height": height,
+                "width": width,
+                "seed": seed or 0,
+            }
+        }
+        
+        # Add negative prompt if provided
         if negative_prompt:
-            payload["text_prompts"].append({"text": negative_prompt, "weight": -1.0})
-        if seed:
-            payload["seed"] = seed
+            payload["textToImageParams"]["negativeText"] = negative_prompt
+            
         return payload
 
     def generate_images(
@@ -89,7 +126,7 @@ class BedrockService:
             modelId=self._model_id,
             contentType="application/json",
             accept="application/json",
-            body=bytes(str(body), "utf-8"),
+            body=json.dumps(body),
         )
 
         response_body = response.get("body")
@@ -100,22 +137,22 @@ class BedrockService:
         if not response_json:
             raise RuntimeError("Empty response from Bedrock model")
 
-        data: Dict[str, Any] = __import__("json").loads(response_json)
-        results = data.get("artifacts", [])
-        if not results:
-            raise RuntimeError("No artifacts in Bedrock response")
-
+        data: Dict[str, Any] = json.loads(response_json)
+        
+        # Titan V2 response format
         images: List[bytes] = []
-        for artifact in results:
-            if artifact.get("finishReason") == "SUCCESS":
-                b64_image = artifact.get("base64")
-                if not b64_image:
-                    continue
+        image_data_list = data.get("images", [])
+        
+        if not image_data_list:
+            raise RuntimeError("No images in Bedrock response")
+        
+        for image_data in image_data_list:
+            b64_image = image_data
+            if b64_image:
                 images.append(b64decode(b64_image))
             else:
-                logger.warning(
-                    f"Artifact not successful: finishReason={artifact.get('finishReason')}"
-                )
+                logger.warning("Empty image data in response")
+                
         return images
 
 
