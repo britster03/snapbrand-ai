@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from base64 import b64decode
 from typing import Any, Dict, List, Optional
 
@@ -89,7 +90,7 @@ class BedrockService:
             modelId=self._model_id,
             contentType="application/json",
             accept="application/json",
-            body=bytes(str(body), "utf-8"),
+            body=json.dumps(body).encode("utf-8"),
         )
 
         response_body = response.get("body")
