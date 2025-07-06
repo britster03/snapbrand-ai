@@ -113,7 +113,7 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-2 hover:border-blue-200 transition-colors">
+            <Card className="border-2 hover:border-blue-200 transition-colors" variant="gradient" animateHover>
               <CardHeader>
                 <Palette className="w-12 h-12 text-blue-600 mb-4" />
                 <CardTitle>Brand Asset Ingestion</CardTitle>
@@ -123,7 +123,7 @@ export default function LandingPage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-purple-200 transition-colors">
+            <Card className="border-2 hover:border-purple-200 transition-colors" variant="gradient" animateHover>
               <CardHeader>
                 <Target className="w-12 h-12 text-purple-600 mb-4" />
                 <CardTitle>Template-Based Prompting</CardTitle>
@@ -133,7 +133,7 @@ export default function LandingPage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-green-200 transition-colors">
+            <Card className="border-2 hover:border-green-200 transition-colors" variant="gradient" animateHover>
               <CardHeader>
                 <Globe className="w-12 h-12 text-green-600 mb-4" />
                 <CardTitle>Real-Time Context</CardTitle>
@@ -143,7 +143,7 @@ export default function LandingPage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition-colors">
+            <Card className="border-2 hover:border-orange-200 transition-colors" variant="gradient" animateHover>
               <CardHeader>
                 <Zap className="w-12 h-12 text-orange-600 mb-4" />
                 <CardTitle>Batch Generation</CardTitle>
@@ -153,7 +153,7 @@ export default function LandingPage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-red-200 transition-colors">
+            <Card className="border-2 hover:border-red-200 transition-colors" variant="gradient" animateHover>
               <CardHeader>
                 <BarChart3 className="w-12 h-12 text-red-600 mb-4" />
                 <CardTitle>Developer API</CardTitle>
@@ -163,7 +163,7 @@ export default function LandingPage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-2 hover:border-indigo-200 transition-colors">
+            <Card className="border-2 hover:border-indigo-200 transition-colors" variant="gradient" animateHover>
               <CardHeader>
                 <Download className="w-12 h-12 text-indigo-600 mb-4" />
                 <CardTitle>Export & Edit</CardTitle>

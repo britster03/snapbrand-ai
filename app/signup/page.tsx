@@ -7,19 +7,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { Sparkles, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react"
+import { Sparkles, Mail, Lock, Eye, EyeOff, Loader2, User } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/components/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { motion } from "framer-motion"
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [termsAgreed, setTermsAgreed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   
   const { login, isAuthenticated } = useAuth()
+  // TODO: Replace with actual signup function when implemented in AuthContext
+  const signup = async (username: string, email: string, password: string) => {
+    // Placeholder for signup functionality
+    console.log('Signup placeholder', { username, email, password });
+    // Simulate successful signup for now
+    return Promise.resolve();
+  };
   const { toast } = useToast()
   const router = useRouter()
 
@@ -33,7 +44,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!username || !password) {
+    if (!username || !email || !password || !confirmPassword) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -42,19 +53,37 @@ export default function LoginPage() {
       return
     }
 
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (!termsAgreed) {
+      toast({
+        title: "Error",
+        description: "You must agree to the Terms of Service and Privacy Policy",
+        variant: "destructive",
+      })
+      return
+    }
+
     setIsLoading(true)
     
     try {
-      await login(username, password)
+      await signup(username, email, password)
       toast({
         title: "Success",
-        description: "Successfully logged in!",
+        description: "Successfully signed up!",
       })
       router.push('/dashboard')
     } catch (error: any) {
       toast({
-        title: "Login Failed",
-        description: error.message || "Invalid credentials",
+        title: "Signup Failed",
+        description: error.message || "An error occurred during signup",
         variant: "destructive",
       })
     } finally {
@@ -84,22 +113,37 @@ export default function LoginPage() {
 
         <Card variant="gradient">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>Sign in to your account to continue creating amazing brand visuals</CardDescription>
+            <CardTitle className="text-2xl">Create Account</CardTitle>
+            <CardDescription>Join us to start creating amazing brand visuals</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Username or Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     id="username"
                     type="text"
-                    placeholder="Enter your username or email"
+                    placeholder="Choose a username"
                     className="pl-10"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="pl-10"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
                   />
                 </div>
@@ -111,7 +155,7 @@ export default function LoginPage() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder="Create a password"
                     className="pl-10 pr-10"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -129,25 +173,51 @@ export default function LoginPage() {
                   </Button>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="remember" className="rounded" />
-                  <Label htmlFor="remember" className="text-sm">
-                    Remember me
-                  </Label>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm your password"
+                    className="pl-10 pr-10"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </Button>
                 </div>
-                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
-                  Forgot password?
-                </Link>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input 
+                  type="checkbox" 
+                  id="terms" 
+                  className="rounded" 
+                  checked={termsAgreed}
+                  onChange={() => setTermsAgreed(!termsAgreed)}
+                />
+                <Label htmlFor="terms" className="text-sm">
+                  I agree to the <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>
+                </Label>
               </div>
               <Button className="w-full" size="lg" type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Signing In...
+                    Creating Account...
                   </>
                 ) : (
-                  "Sign In"
+                  "Sign Up"
                 )}
               </Button>
             </form>
@@ -192,16 +262,16 @@ export default function LoginPage() {
             </div>
 
             <div className="text-center text-sm">
-              Don't have an account?{" "}
-              <Link href="/signup" className="text-blue-600 hover:underline font-medium">
-                Sign up
+              Already have an account?{" "}
+              <Link href="/login" className="text-blue-600 hover:underline font-medium">
+                Sign in
               </Link>
             </div>
           </CardContent>
         </Card>
 
         <div className="text-center mt-8 text-sm text-gray-500">
-          By signing in, you agree to our{" "}
+          By signing up, you agree to our{" "}
           <Link href="/terms" className="hover:underline">
             Terms of Service
           </Link>{" "}
@@ -213,4 +283,4 @@ export default function LoginPage() {
       </motion.div>
     </div>
   )
-}
+} 
