@@ -22,6 +22,10 @@ SIZE_MULTIPLIERS: Dict[str, Dict[str, float]] = {
     }
 }
 
+# Credits system
+CREDITS_PER_DOLLAR = 100  # 1 credit = $0.01
+DEFAULT_CREDITS_LIMIT = 500  # Default credits for users
+
 
 def calculate_generation_cost(model_id: str, num_images: int, size: str = "1024x1024") -> float:
     """
@@ -45,6 +49,48 @@ def calculate_generation_cost(model_id: str, num_images: int, size: str = "1024x
     return base_cost * num_images
 
 
+def usd_to_credits(usd_amount: float) -> int:
+    """
+    Convert USD amount to credits.
+    
+    Args:
+        usd_amount: Amount in USD
+    
+    Returns:
+        Number of credits (rounded to nearest integer)
+    """
+    return round(usd_amount * CREDITS_PER_DOLLAR)
+
+
+def credits_to_usd(credits: int) -> float:
+    """
+    Convert credits to USD amount.
+    
+    Args:
+        credits: Number of credits
+    
+    Returns:
+        Amount in USD
+    """
+    return credits / CREDITS_PER_DOLLAR
+
+
+def calculate_credits_cost(model_id: str, num_images: int, size: str = "1024x1024") -> int:
+    """
+    Calculate the cost in credits for generating images.
+    
+    Args:
+        model_id: The Bedrock model identifier
+        num_images: Number of images to generate
+        size: Image size (e.g., "1024x1024")
+    
+    Returns:
+        Total cost in credits
+    """
+    usd_cost = calculate_generation_cost(model_id, num_images, size)
+    return usd_to_credits(usd_cost)
+
+
 def get_model_pricing_info(model_id: str) -> Dict[str, any]:
     """
     Get pricing information for a specific model.
@@ -60,7 +106,12 @@ def get_model_pricing_info(model_id: str) -> Dict[str, any]:
     return {
         "model_id": model_id,
         "base_cost_per_image": base_cost,
+        "credits_per_image": usd_to_credits(base_cost),
         "currency": "USD",
+        "credits_system": {
+            "credits_per_dollar": CREDITS_PER_DOLLAR,
+            "default_credits_limit": DEFAULT_CREDITS_LIMIT
+        },
         "size_multipliers": SIZE_MULTIPLIERS.get(model_id, {}),
         "notes": "Pricing based on AWS Bedrock official rates"
     } 

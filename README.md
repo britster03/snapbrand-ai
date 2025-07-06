@@ -1,386 +1,278 @@
-# SnapBrand.ai - AI-Powered Brand Asset Studio
+# SnapBrand.ai - Professional AI Image Generation Platform
 
-A production-ready AI-powered brand asset studio that generates on-brand images using Amazon Bedrock's Stable Diffusion models. Built with Next.js frontend and FastAPI backend.
+🚀 **Production-ready AI image generation system** built for hackathons and professional use cases. Generate high-quality, brand-consistent images using state-of-the-art diffusion models with professional standards and industry guidelines.
 
-## 🚀 Features
+## 🌟 Key Features
 
-- **AI Image Generation**: Powered by Amazon Bedrock Stable Diffusion XL
-- **Template System**: 8 pre-built templates for various use cases
-- **Batch Processing**: Generate multiple images with real-time progress tracking
-- **Brand Asset Management**: Upload and manage brand assets with S3 integration
-- **Rate Limiting**: Production-ready rate limiting and API key authentication
-- **Real-time Updates**: Live progress tracking for batch operations
-- **Responsive UI**: Modern, mobile-friendly interface built with Tailwind CSS
+### 🎨 Professional Image Generation
+- **Advanced Prompt Engineering**: Industry-standard prompt enhancement with professional guidelines
+- **Quality Controls**: 4 quality levels (Standard, High, Ultra, Professional) with automated validation
+- **Style Categories**: Photorealistic, Artistic, Technical, Marketing, Product Photography
+- **Composition Rules**: Rule of thirds, Golden ratio, Leading lines, Symmetry, Center composition
+- **Lighting Presets**: Professional, Studio, Natural, Dramatic, Soft, Golden hour
 
-## 📋 Prerequisites
+### 🏢 Brand Consistency
+- **Brand Asset Management**: Upload and manage logos, color palettes, sample images
+- **Style Presets**: Professional, Vibrant, Minimal, Luxury brand styles
+- **Color Integration**: Automatic color palette application to generations
+- **Template System**: Professional templates for various use cases
 
-- **Node.js** 18+ and pnpm/npm
-- **Python** 3.11+
-- **AWS Account** with Bedrock and S3 access
-- **Docker** (optional, for containerized deployment)
+### 📊 Production Features
+- **Real-time Cost Tracking**: AWS Bedrock pricing integration ($0.04/image)
+- **Credits System**: 1 credit = $0.01 USD for transparent billing
+- **Batch Processing**: Generate multiple images efficiently
+- **Quality Validation**: Automated image quality assessment
+- **Usage Analytics**: Track generation statistics and costs
 
-## 🛠 Quick Start
+### 🔧 Technical Excellence
+- **AWS Integration**: Bedrock for generation, S3 for storage
+- **FastAPI Backend**: High-performance Python API
+- **Next.js Frontend**: Modern React-based UI
+- **Professional UI**: shadcn/ui components with responsive design
+- **Authentication**: JWT-based secure authentication
 
-### Option 1: Automated Setup (Recommended)
+## 🏗️ Architecture
 
+```
+Frontend (Next.js)     Backend (FastAPI)       AWS Services
+├── Dashboard          ├── Generation API      ├── Bedrock (AI Models)
+├── Generate Page      ├── Template System     ├── S3 (Storage)
+├── Brand Assets       ├── Prompt Engineering  └── IAM (Security)
+├── Batch Processing   ├── Quality Validation
+└── Analytics          └── Cost Tracking
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Python 3.9+
+- AWS Account with Bedrock access
+- Docker (optional)
+
+### 1. Clone Repository
 ```bash
-# Clone the repository
-git clone <repository-url>
+git clone https://github.com/yourusername/snapbrand-ai.git
 cd snapbrand-ai
-
-# Run the automated setup script
-./start.sh setup
-
-# Start the application
-./start.sh start
 ```
 
-### Option 2: Docker Compose
-
-```bash
-# Set up environment variables
-cp backend/.env.example .env
-# Edit .env with your AWS credentials
-
-# Start with Docker
-./start.sh docker
-```
-
-### Option 3: Manual Setup
-
-#### Backend Setup
-
+### 2. Backend Setup
 ```bash
 cd backend
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Set up environment variables
+# Configure environment
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your AWS credentials and settings
 
-# Start the backend
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# Initialize database
+alembic upgrade head
+
+# Start backend
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### Frontend Setup
-
+### 3. Frontend Setup
 ```bash
-# Install dependencies
-pnpm install
-
-# Start the frontend
-pnpm dev
+cd frontend  # or root directory
+npm install
+npm run dev
 ```
 
-## 🔧 Configuration
+### 4. Access Application
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
 
-### Environment Variables
+## 🎯 Professional Templates
 
-Create a `.env` file in the backend directory:
+### Product Photography
+- **Product Hero**: Studio lighting, center composition, professional grade
+- **Luxury Brand**: Dramatic lighting, symmetrical composition, premium quality
 
-```bash
-# AWS Configuration
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-BEDROCK_MODEL_ID=stability.stable-diffusion-xl-v1
-S3_BUCKET_NAME=your-bucket-name
+### Marketing Content
+- **Social Media**: Rule of thirds, natural lighting, high quality
+- **Website Hero**: Golden ratio, professional lighting, ultra quality
+- **Email Headers**: Leading lines, professional lighting, marketing style
 
-# Application Configuration
-APP_NAME=SnapBrand.ai Backend
-APP_VERSION=1.0.0
-DEBUG=false
-LOG_LEVEL=INFO
+### Technical Content
+- **Technical Illustrations**: Precise documentation style, soft lighting
+- **Corporate Headshots**: Studio lighting, professional composition
 
-# Security & CORS
-CORS_ORIGINS=["http://localhost:3000", "https://your-domain.com"]
-API_KEYS=["your-api-key-1", "your-api-key-2"]
+## 📈 Quality Standards
 
-# Rate Limiting
-RATE_LIMIT_PER_MINUTE=60
-RATE_LIMIT_PER_HOUR=1000
+### Quality Levels
+1. **Standard**: Good for basic use cases (512px+, basic quality checks)
+2. **High**: Suitable for most professional needs (768px+, enhanced quality)
+3. **Ultra**: Premium quality for important content (1024px+, strict validation)
+4. **Professional**: Industry-grade for critical applications (1024px+, comprehensive validation)
 
-# S3 Configuration
-PRESIGN_EXPIRATION=3600
-MAX_FILE_SIZE_MB=10
+### Validation Metrics
+- **Resolution**: Minimum dimensions based on quality level
+- **Sharpness**: Laplacian variance for edge detection
+- **Contrast**: Standard deviation analysis
+- **Noise Level**: High-pass filter estimation
+- **Professional Standards**: Aspect ratio, color consistency checks
 
-# Bedrock Configuration
-MAX_IMAGES_PER_REQUEST=10
-DEFAULT_IMAGE_SIZE=1024x1024
-```
+## 💰 Pricing & Credits
 
-### Frontend Configuration
+- **1 Credit = $0.01 USD** (transparent pricing)
+- **Generation Cost**: 4 credits per image ($0.04)
+- **Real-time Tracking**: See exact costs before generation
+- **AWS Integration**: Based on actual Bedrock pricing
 
-Set environment variables for the frontend:
+## 🔒 Security Features
 
-```bash
-# .env.local
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
+- **JWT Authentication**: Secure token-based authentication
+- **Protected Routes**: Frontend route protection
+- **API Key Management**: Secure API access
+- **AWS IAM**: Proper cloud security setup
 
-## 🏗 Architecture
+## 📊 API Endpoints
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Next.js UI   │───▶│  FastAPI Backend │───▶│  Amazon Bedrock │
-│  (Port 3000)   │    │   (Port 8000)    │    │  (Image Gen)    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       ▼                       │
-         │              ┌─────────────────┐              │
-         │              │   Amazon S3     │              │
-         └──────────────│ (Asset Storage) │◀─────────────┘
-                        └─────────────────┘
-```
-
-## 📚 API Documentation
-
-### Core Endpoints
-
-- `GET /health` - Health check with service status
-- `POST /v1/generate` - Generate single image
-- `POST /v1/batch/generate` - Create batch generation job
-- `GET /v1/batch/{id}/status` - Get batch job status
-- `GET /v1/templates` - List available templates
-- `GET /v1/assets/upload-url` - Get presigned upload URL
-
-### Authentication
-
-All generation endpoints require API key authentication:
-
-```bash
-curl -X POST http://localhost:8000/v1/generate \
-  -H "X-API-Key: your-api-key" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "A professional product photo",
-    "template_id": "product-hero",
-    "num_images": 1
-  }'
-```
+### Generation
+- `POST /v1/generate` - Generate images with professional enhancement
+- `GET /v1/generate/status` - Check generation service status
 
 ### Templates
+- `GET /v1/templates` - List available templates
+- `GET /v1/templates/{id}` - Get specific template
+- `GET /v1/templates/categories` - List template categories
 
-Built-in templates include:
-- `product-hero` - Product photography
-- `instagram-post` - Social media content
-- `lifestyle-scene` - Lifestyle photography
-- `email-header` - Email marketing headers
-- `website-banner` - Website hero banners
-- `linkedin-post` - Professional content
-- `product-catalog` - Catalog layouts
-- `seasonal-campaign` - Seasonal marketing
+### Images
+- `GET /v1/images` - List user images
+- `GET /v1/images/{id}` - Get specific image
+- `DELETE /v1/images/{id}` - Delete image
+- `GET /v1/images/stats/summary` - Get usage statistics
+
+### Batch Processing
+- `POST /v1/batch` - Create batch generation job
+- `GET /v1/batch/{id}` - Get batch status
+- `GET /v1/batch` - List user batch jobs
+
+## 🎨 Brand Style Integration
+
+### Available Styles
+- **Professional**: Clean, corporate, minimal (Blue, Gray, White)
+- **Vibrant**: Bold, energetic, colorful (Purple, Green, Orange)
+- **Minimal**: Simple, clean, modern (White, Gray, Dark Gray)
+- **Luxury**: Premium, elegant, sophisticated (Dark Gray, Gold, White)
+
+### Style Application
+- Automatic keyword integration
+- Color palette application
+- Style-specific prompt enhancement
+- Brand consistency validation
+
+## 🔧 Development
+
+### Backend Structure
+```
+backend/
+├── app/
+│   ├── core/           # Configuration, auth, pricing
+│   ├── models/         # Database models and schemas
+│   ├── routes/         # API endpoints
+│   ├── services/       # Business logic
+│   └── main.py         # FastAPI application
+├── requirements.txt    # Python dependencies
+└── Dockerfile         # Container configuration
+```
+
+### Frontend Structure
+```
+frontend/
+├── app/               # Next.js app directory
+│   ├── dashboard/     # Dashboard pages
+│   ├── globals.css    # Global styles
+│   └── layout.tsx     # Root layout
+├── components/        # Reusable components
+├── lib/              # Utilities and API client
+└── public/           # Static assets
+```
 
 ## 🚀 Deployment
 
-### AWS App Runner (Recommended)
-
-1. **Set up AWS CDK infrastructure**:
-   ```bash
-   cd infrastructure
-   npm install
-   cdk deploy
-   ```
-
-2. **Build and push Docker image**:
-   ```bash
-   # Build image
-   docker build -f backend/Dockerfile -t snapbrand-backend .
-   
-   # Tag and push to ECR
-   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
-   docker tag snapbrand-backend:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/snapbrand-backend:latest
-   docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/snapbrand-backend:latest
-   ```
-
-3. **Deploy frontend to Vercel**:
-   ```bash
-   # Set environment variables in Vercel
-   NEXT_PUBLIC_API_URL=https://your-app-runner-url.amazonaws.com
-   
-   # Deploy
-   vercel --prod
-   ```
-
-### Docker Compose (Development)
-
+### Docker Deployment
 ```bash
-# Start all services
-docker-compose up -d
+# Build and run with Docker Compose
+docker-compose up --build
 
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
+# Or build individually
+docker build -t snapbrand-backend ./backend
+docker build -t snapbrand-frontend ./frontend
 ```
 
-## 🔍 Monitoring & Logging
+### AWS Deployment
+- Use provided CDK infrastructure in `/infra`
+- Configure proper IAM roles for Bedrock access
+- Set up S3 bucket for image storage
+- Deploy using AWS CDK
 
-### Health Checks
+## 📝 Environment Variables
 
-- Backend: `http://localhost:8000/health`
-- Frontend: `http://localhost:3000`
-
-### Logs
-
-- Backend logs: `backend.log`
-- Frontend logs: `frontend.log`
-- Docker logs: `docker-compose logs`
-
-### Service Status
-
+### Backend (.env)
 ```bash
-# Check service status
-./start.sh status
+# AWS Configuration
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=your-bucket-name
+BEDROCK_MODEL_ID=stability.stable-diffusion-xl-v1
 
-# View recent logs
-tail -f backend.log
-tail -f frontend.log
+# Database
+DATABASE_URL=sqlite:///./snapbrand.db
+
+# Security
+SECRET_KEY=your-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# API Configuration
+MAX_IMAGES_PER_REQUEST=10
+RATE_LIMIT_PER_MINUTE=60
+DEFAULT_IMAGE_SIZE=1024x1024
 ```
 
-## 🛡 Security Features
-
-- **API Key Authentication**: Secure endpoint access
-- **Rate Limiting**: 60 requests/minute, 1000/hour per IP
-- **CORS Protection**: Configurable allowed origins
-- **Input Validation**: Comprehensive request validation
-- **Error Handling**: Secure error responses without sensitive data
-- **Presigned URLs**: Secure S3 access without exposing credentials
-
-## 🧪 Testing
-
-### Backend Tests
-
+### Frontend (.env.local)
 ```bash
-cd backend
-source venv/bin/activate
-python -m pytest tests/
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
-
-### Frontend Tests
-
-```bash
-pnpm test
-```
-
-### API Testing
-
-```bash
-# Test health endpoint
-curl http://localhost:8000/health
-
-# Test generation (requires API key)
-curl -X POST http://localhost:8000/v1/generate \
-  -H "X-API-Key: your-api-key" \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "test image", "num_images": 1}'
-```
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-1. **Port already in use**:
-   ```bash
-   # Check what's using the port
-   lsof -i :8000
-   lsof -i :3000
-   
-   # Kill the process
-   kill -9 <PID>
-   ```
-
-2. **AWS credentials not found**:
-   ```bash
-   # Configure AWS CLI
-   aws configure
-   
-   # Or set environment variables
-   export AWS_ACCESS_KEY_ID=your_key
-   export AWS_SECRET_ACCESS_KEY=your_secret
-   ```
-
-3. **Python dependencies issues**:
-   ```bash
-   # Recreate virtual environment
-   rm -rf backend/venv
-   cd backend
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-4. **Docker issues**:
-   ```bash
-   # Clean up Docker
-   docker-compose down
-   docker system prune -f
-   docker-compose up --build
-   ```
-
-### Debug Mode
-
-Enable debug mode for detailed logging:
-
-```bash
-# Backend
-export DEBUG=true
-export LOG_LEVEL=DEBUG
-
-# Frontend
-export NODE_ENV=development
-```
-
-## 📈 Performance Optimization
-
-### Production Settings
-
-- Set `DEBUG=false` in production
-- Use `LOG_LEVEL=WARNING` or `ERROR` in production
-- Enable CDN for static assets
-- Use Redis for session storage (optional)
-- Configure proper rate limits based on usage
-
-### Scaling
-
-- Use AWS App Runner auto-scaling
-- Implement database for persistent storage
-- Add Redis for caching and session management
-- Use CloudFront for global distribution
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🏆 Hackathon Ready
 
-For support and questions:
-- Create an issue in the repository
-- Check the troubleshooting section
-- Review the API documentation at `http://localhost:8000/docs`
+This project is specifically designed for hackathons with:
+- **Quick Setup**: Get running in minutes
+- **Professional Quality**: Industry-standard features
+- **Scalable Architecture**: Ready for production
+- **Comprehensive Documentation**: Easy to understand and extend
+- **Modern Tech Stack**: Latest technologies and best practices
 
-## 🎯 Roadmap
+## 🌟 Why SnapBrand.ai?
 
-- [ ] Database integration for persistent storage
-- [ ] User authentication and management
-- [ ] Advanced image editing features
-- [ ] Custom model fine-tuning
-- [ ] Analytics and usage tracking
-- [ ] Multi-tenant support
-- [ ] Advanced template editor
-- [ ] Integration with design tools 
+- **🎯 Purpose-Built**: Designed specifically for professional image generation
+- **🚀 Production-Ready**: Not just a demo, but a complete system
+- **🎨 Brand-Focused**: Built-in brand consistency and style management
+- **💰 Cost-Aware**: Transparent pricing and real-time cost tracking
+- **🔧 Developer-Friendly**: Well-documented, modular, and extensible
+- **🏆 Hackathon-Optimized**: Quick to deploy, impressive to demo
+
+---
+
+**Built with ❤️ for hackathons and professional use cases**
+
+*Generate images that follow proper real-world guidelines and deliver exceptional quality to your users.* 

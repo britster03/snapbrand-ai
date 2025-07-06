@@ -19,6 +19,12 @@ class GenerateRequest(BaseModel):
     seed: Optional[int] = Field(None, ge=0)
     template_id: Optional[str] = Field(None, description="Template ID to use for generation")
     brand_style: Optional[Dict[str, Any]] = Field(None, description="Brand style parameters")
+    
+    # Professional quality parameters
+    quality: Optional[str] = Field(None, description="Image quality level (standard, high, ultra, professional)")
+    style: Optional[str] = Field(None, description="Style category (photorealistic, artistic, technical, marketing, product)")
+    composition: Optional[str] = Field(None, description="Composition rule (rule_of_thirds, center_composition, leading_lines, symmetry, golden_ratio)")
+    lighting: Optional[str] = Field(None, description="Lighting preset (professional, studio, natural, dramatic, soft, golden_hour)")
 
 
 class GeneratedImage(BaseModel):

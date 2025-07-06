@@ -11,6 +11,7 @@ import { Sparkles, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/components/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { motion } from "framer-motion"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -63,7 +64,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      <motion.div 
+        className="w-full max-w-md"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2">
@@ -76,7 +82,7 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        <Card>
+        <Card variant="gradient">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome back</CardTitle>
             <CardDescription>Sign in to your account to continue creating amazing brand visuals</CardDescription>
@@ -204,7 +210,7 @@ export default function LoginPage() {
             Privacy Policy
           </Link>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

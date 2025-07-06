@@ -36,32 +36,38 @@ settings = get_settings()
 
 
 async def process_batch_job(batch_id: str, requests: List[GenerateRequest]):
-    """Background task to process batch generation requests."""
-    logger.info(f"Starting batch job {batch_id} with {len(requests)} requests")
+    """Background task to process batch image generation."""
     
-    # Get database session
+    # Create a new database session for the background task
     from ..models.database import SessionLocal
     db = SessionLocal()
     
     try:
+        # Get batch job and user
         batch_job = db.query(DBBatchJob).filter(DBBatchJob.id == batch_id).first()
         if not batch_job:
-            logger.error(f"Batch job {batch_id} not found in database")
+            logger.error(f"Batch job {batch_id} not found")
+            return
+        
+        user = db.query(User).filter(User.id == batch_job.user_id).first()
+        if not user:
+            logger.error(f"User {batch_job.user_id} not found")
             return
         
         batch_job.status = "processing"
         batch_job.started_at = datetime.utcnow()
-        batch_job.updated_at = datetime.utcnow()
         db.commit()
-    
+        
         results = []
         completed_requests = 0
         error_count = 0
-    
+        total_images_generated = 0
+        total_cost = 0.0
+        
         for i, request in enumerate(requests):
+            logger.info(f"Processing request {i+1}/{len(requests)} in batch {batch_id}")
+            
             try:
-                logger.info(f"Processing request {i+1}/{len(requests)} in batch {batch_id}")
-                
                 # Generate images using Bedrock
                 images = bedrock_service.generate_images(
                     prompt=request.prompt,
@@ -72,7 +78,7 @@ async def process_batch_job(batch_id: str, requests: List[GenerateRequest]):
                     size=request.size,
                 )
                 
-                # Upload to S3 and create response
+                # Upload to S3 and save to database
                 generated_images = []
                 for idx, img_bytes in enumerate(images):
                     image_id = f"{batch_id}_{i}_{idx}"
@@ -80,6 +86,34 @@ async def process_batch_job(batch_id: str, requests: List[GenerateRequest]):
                     s3_url = s3_service.upload_bytes(img_bytes, key)
                     presigned_url = s3_service.generate_presigned_url(key)
                     
+                    # Calculate cost for this image
+                    image_cost = calculate_generation_cost(
+                        model_id=settings.bedrock_model_id,
+                        num_images=1,
+                        size=request.size
+                    )
+                    
+                    # Save image to database
+                    db_image = DBGeneratedImage(
+                        id=image_id,
+                        user_id=user.id,
+                        prompt=request.prompt,
+                        negative_prompt=request.negative_prompt,
+                        size=request.size,
+                        s3_url=s3_url,
+                        s3_key=key,
+                        guidance_scale=request.guidance_scale,
+                        seed=request.seed,
+                        template_id=request.template_id,
+                        batch_id=batch_id,
+                        batch_index=i,
+                        generation_cost=str(image_cost),
+                        brand_style=str(request.brand_style) if request.brand_style else None,
+                        processing_time=0.0  # Per-image processing time not tracked for batch
+                    )
+                    db.add(db_image)
+                    
+                    # Create response object
                     generated_image = GeneratedImage(
                         id=image_id,
                         s3_url=s3_url,
@@ -91,12 +125,16 @@ async def process_batch_job(batch_id: str, requests: List[GenerateRequest]):
                             "request_index": i,
                             "image_index": idx,
                             "template_id": request.template_id,
-                            "brand_style": request.brand_style
+                            "brand_style": request.brand_style,
+                            "generation_cost": image_cost
                         }
                     )
                     generated_images.append(generated_image)
+                    
+                    total_images_generated += 1
+                    total_cost += image_cost
                 
-                # Create response for this request with real cost calculation
+                # Create response for this request
                 actual_cost = calculate_generation_cost(
                     model_id=settings.bedrock_model_id,
                     num_images=len(generated_images),
@@ -126,15 +164,19 @@ async def process_batch_job(batch_id: str, requests: List[GenerateRequest]):
             # Small delay to prevent overwhelming the service
             await asyncio.sleep(0.1)
         
+        # Update user statistics
+        user.total_images_generated += total_images_generated
+        user.total_cost_spent = str(float(user.total_cost_spent) + total_cost)
+        
         # Finalize batch job and save to database
         batch_job.status = "completed" if error_count == 0 else "completed_with_errors"
         batch_job.results_data = json.dumps([r.dict() for r in results], default=str)
         batch_job.completed_at = datetime.utcnow()
         batch_job.updated_at = datetime.utcnow()
-        batch_job.actual_cost = str(sum(float(r.total_cost or 0) for r in results))
+        batch_job.actual_cost = str(total_cost)
         db.commit()
         
-        logger.info(f"Completed batch job {batch_id}: {completed_requests} successful, {error_count} errors")
+        logger.info(f"Completed batch job {batch_id}: {completed_requests} successful, {error_count} errors, {total_images_generated} images generated")
         
     finally:
         db.close()

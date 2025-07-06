@@ -1,6 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from datetime import datetime
 
 from ..models.database import get_db
@@ -8,6 +9,7 @@ from ..models.user import User
 from ..models.generated_image import GeneratedImage as DBGeneratedImage
 from ..models.schemas import GeneratedImage
 from ..core.auth import get_current_active_user
+from ..core.pricing import usd_to_credits, DEFAULT_CREDITS_LIMIT
 from ..services.s3 import s3_service
 
 router = APIRouter(prefix="/v1/images", tags=["images"])
@@ -144,7 +146,7 @@ async def get_image_stats(
     ).count()
     
     # Get images by template
-    template_stats = db.query(DBGeneratedImage.template_id, db.func.count(DBGeneratedImage.id))\
+    template_stats = db.query(DBGeneratedImage.template_id, func.count(DBGeneratedImage.id))\
         .filter(
             DBGeneratedImage.user_id == current_user.id,
             DBGeneratedImage.is_deleted == False,
@@ -154,7 +156,7 @@ async def get_image_stats(
         .all()
     
     # Get images by size
-    size_stats = db.query(DBGeneratedImage.size, db.func.count(DBGeneratedImage.id))\
+    size_stats = db.query(DBGeneratedImage.size, func.count(DBGeneratedImage.id))\
         .filter(
             DBGeneratedImage.user_id == current_user.id,
             DBGeneratedImage.is_deleted == False
@@ -162,9 +164,20 @@ async def get_image_stats(
         .group_by(DBGeneratedImage.size)\
         .all()
     
+    # Calculate credits information
+    total_cost_usd = float(current_user.total_cost_spent)
+    total_credits_used = usd_to_credits(total_cost_usd)
+    remaining_credits = max(0, DEFAULT_CREDITS_LIMIT - total_credits_used)
+    
     return {
         "total_images": total_images,
         "total_cost_spent": current_user.total_cost_spent,
+        "credits": {
+            "used": total_credits_used,
+            "remaining": remaining_credits,
+            "limit": DEFAULT_CREDITS_LIMIT,
+            "cost_per_credit": 0.01  # $0.01 per credit
+        },
         "template_usage": {template: count for template, count in template_stats},
         "size_usage": {size: count for size, count in size_stats}
     } 
