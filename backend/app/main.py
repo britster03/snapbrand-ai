@@ -2,6 +2,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from loguru import logger
+from typing import Dict
 
 from .core.config import Settings
 from .core.middleware import setup_cors_middleware, setup_rate_limit_middleware, setup_api_key_middleware
@@ -142,7 +143,7 @@ async def health_check() -> dict:
 
 
 @app.get("/", tags=["root"])
-async def root() -> dict[str, str]:
+async def root() -> Dict[str, str]:
     """Root endpoint with API information."""
     return {
         "name": settings.app_name,
