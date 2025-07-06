@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner"
 import Image from "next/image"
 import Link from "next/link"
+import { ProtectedRoute } from "@/components/protected-route"
 
 import { 
   apiClient, 
@@ -212,256 +213,258 @@ export default function BatchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b">
-        <div className="px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link href="/dashboard" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                SnapBrand.ai
-              </span>
-            </Link>
-            <Badge variant="secondary" className="bg-orange-100 text-orange-700">
-              Batch Generate
-            </Badge>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" onClick={loadBatchJobs}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </Button>
-            <Button asChild>
-              <Link href="/dashboard/generate">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Single Generate
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white border-b">
+          <div className="px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link href="/dashboard" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  SnapBrand.ai
+                </span>
               </Link>
-            </Button>
+              <Badge variant="secondary" className="bg-orange-100 text-orange-700">
+                Batch Generate
+              </Badge>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Button variant="outline" size="sm" onClick={loadBatchJobs}>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+              <Button asChild>
+                <Link href="/dashboard/generate">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Single Generate
+                </Link>
+              </Button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="flex">
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          <div className="max-w-6xl mx-auto space-y-6">
-            {/* Batch Requests Form */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span className="flex items-center">
-                    <Zap className="w-5 h-5 mr-2" />
-                    Batch Generation Requests
-                  </span>
-                  <Button variant="outline" size="sm" onClick={addRequest}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Request
-                  </Button>
-                </CardTitle>
-                <CardDescription>
-                  Create multiple image generation requests to process in batch
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {requests.map((request, index) => (
-                  <Card key={request.id} className="border-2">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm">Request {index + 1}</CardTitle>
-                        {requests.length > 1 && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeRequest(request.id)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label>Prompt</Label>
-                        <Textarea
-                          placeholder="Describe the image you want to generate..."
-                          value={request.prompt}
-                          onChange={(e) => updateRequest(request.id, "prompt", e.target.value)}
-                          rows={2}
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label>Negative Prompt (Optional)</Label>
-                        <Textarea
-                          placeholder="Describe what you don't want in the image..."
-                          value={request.negative_prompt || ""}
-                          onChange={(e) => updateRequest(request.id, "negative_prompt", e.target.value)}
-                          rows={1}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-3 gap-4">
-                        <div>
-                          <Label>Images</Label>
-                          <Input
-                            type="number"
-                            min="1"
-                            max="10"
-                            value={request.num_images}
-                            onChange={(e) => updateRequest(request.id, "num_images", parseInt(e.target.value))}
-                          />
-                        </div>
-                        <div>
-                          <Label>Size</Label>
-                          <select
-                            value={request.size}
-                            onChange={(e) => updateRequest(request.id, "size", e.target.value)}
-                            className="w-full p-2 border rounded-md"
-                          >
-                            <option value="512x512">512x512</option>
-                            <option value="768x768">768x768</option>
-                            <option value="1024x1024">1024x1024</option>
-                            <option value="1024x768">1024x768</option>
-                            <option value="768x1024">768x1024</option>
-                          </select>
-                        </div>
-                        <div>
-                          <Label>Guidance Scale</Label>
-                          <Input
-                            type="number"
-                            min="1"
-                            max="20"
-                            step="0.5"
-                            value={request.guidance_scale}
-                            onChange={(e) => updateRequest(request.id, "guidance_scale", parseFloat(e.target.value))}
-                          />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-                
-                <Button 
-                  onClick={createBatchJob} 
-                  disabled={isCreating || requests.every(req => !req.prompt.trim())}
-                  className="w-full"
-                  size="lg"
-                >
-                  {isCreating ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Creating Batch Job...
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-4 h-4 mr-2" />
-                      Create Batch Job ({requests.filter(req => req.prompt.trim()).length} requests)
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Batch Jobs List */}
-            {batchJobs.length > 0 && (
+        <div className="flex">
+          {/* Main Content */}
+          <main className="flex-1 p-6">
+            <div className="max-w-6xl mx-auto space-y-6">
+              {/* Batch Requests Form */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent Batch Jobs</CardTitle>
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center">
+                      <Zap className="w-5 h-5 mr-2" />
+                      Batch Generation Requests
+                    </span>
+                    <Button variant="outline" size="sm" onClick={addRequest}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Request
+                    </Button>
+                  </CardTitle>
+                  <CardDescription>
+                    Create multiple image generation requests to process in batch
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {batchJobs.map((job) => (
-                      <Card key={job.batch_id} className="border-2">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <Badge className={getStatusColor(job.status)}>
-                                {job.status}
-                              </Badge>
-                              <span className="text-sm font-medium">Batch {job.batch_id}</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              {job.status === "processing" && (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                              )}
-                              {job.status === "completed" && (
-                                <CheckCircle className="w-4 h-4 text-green-600" />
-                              )}
-                              {job.status === "completed_with_errors" && (
-                                <AlertCircle className="w-4 h-4 text-orange-600" />
-                              )}
-                              {["queued", "processing"].includes(job.status) && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => cancelBatchJob(job.batch_id)}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              )}
-                            </div>
+                <CardContent className="space-y-4">
+                  {requests.map((request, index) => (
+                    <Card key={request.id} className="border-2">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-sm">Request {index + 1}</CardTitle>
+                          {requests.length > 1 && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeRequest(request.id)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <Label>Prompt</Label>
+                          <Textarea
+                            placeholder="Describe the image you want to generate..."
+                            value={request.prompt}
+                            onChange={(e) => updateRequest(request.id, "prompt", e.target.value)}
+                            rows={2}
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label>Negative Prompt (Optional)</Label>
+                          <Textarea
+                            placeholder="Describe what you don't want in the image..."
+                            value={request.negative_prompt || ""}
+                            onChange={(e) => updateRequest(request.id, "negative_prompt", e.target.value)}
+                            rows={1}
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <Label>Images</Label>
+                            <Input
+                              type="number"
+                              min="1"
+                              max="10"
+                              value={request.num_images}
+                              onChange={(e) => updateRequest(request.id, "num_images", parseInt(e.target.value))}
+                            />
                           </div>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between text-sm">
-                              <span>Progress</span>
-                              <span>{job.completed_requests}/{job.total_requests}</span>
-                            </div>
-                            <Progress value={job.progress} />
-                            
-                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                              <div>Created: {new Date(job.created_at).toLocaleString()}</div>
-                              <div>Updated: {new Date(job.updated_at).toLocaleString()}</div>
-                              {job.error_count > 0 && (
-                                <div className="text-orange-600">Errors: {job.error_count}</div>
-                              )}
-                            </div>
-                            
-                            {/* Show results if completed */}
-                            {job.results && job.results.length > 0 && (
-                              <div className="mt-4">
-                                <h4 className="text-sm font-medium mb-2">Generated Images</h4>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                  {job.results.flatMap(result => 
-                                    result.images.map(image => (
-                                      <div key={image.id} className="relative group">
-                                        <Image
-                                          src={image.presigned_url}
-                                          alt={image.prompt}
-                                          width={100}
-                                          height={100}
-                                          className="rounded-md object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                          <Button
-                                            size="sm"
-                                            variant="secondary"
-                                            onClick={() => downloadImage(image)}
-                                          >
-                                            <Download className="w-3 h-3" />
-                                          </Button>
-                                        </div>
-                                      </div>
-                                    ))
-                                  )}
-                                </div>
-                              </div>
-                            )}
+                          <div>
+                            <Label>Size</Label>
+                            <select
+                              value={request.size}
+                              onChange={(e) => updateRequest(request.id, "size", e.target.value)}
+                              className="w-full p-2 border rounded-md"
+                            >
+                              <option value="512x512">512x512</option>
+                              <option value="768x768">768x768</option>
+                              <option value="1024x1024">1024x1024</option>
+                              <option value="1024x768">1024x768</option>
+                              <option value="768x1024">768x1024</option>
+                            </select>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          <div>
+                            <Label>Guidance Scale</Label>
+                            <Input
+                              type="number"
+                              min="1"
+                              max="20"
+                              step="0.5"
+                              value={request.guidance_scale}
+                              onChange={(e) => updateRequest(request.id, "guidance_scale", parseFloat(e.target.value))}
+                            />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  
+                  <Button 
+                    onClick={createBatchJob} 
+                    disabled={isCreating || requests.every(req => !req.prompt.trim())}
+                    className="w-full"
+                    size="lg"
+                  >
+                    {isCreating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Creating Batch Job...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-4 h-4 mr-2" />
+                        Create Batch Job ({requests.filter(req => req.prompt.trim()).length} requests)
+                      </>
+                    )}
+                  </Button>
                 </CardContent>
               </Card>
-            )}
-          </div>
-        </main>
+
+              {/* Batch Jobs List */}
+              {batchJobs.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Batch Jobs</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {batchJobs.map((job) => (
+                        <Card key={job.batch_id} className="border-2">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-2">
+                                <Badge className={getStatusColor(job.status)}>
+                                  {job.status}
+                                </Badge>
+                                <span className="text-sm font-medium">Batch {job.batch_id}</span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                {job.status === "processing" && (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                )}
+                                {job.status === "completed" && (
+                                  <CheckCircle className="w-4 h-4 text-green-600" />
+                                )}
+                                {job.status === "completed_with_errors" && (
+                                  <AlertCircle className="w-4 h-4 text-orange-600" />
+                                )}
+                                {["queued", "processing"].includes(job.status) && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => cancelBatchJob(job.batch_id)}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between text-sm">
+                                <span>Progress</span>
+                                <span>{job.completed_requests}/{job.total_requests}</span>
+                              </div>
+                              <Progress value={job.progress} />
+                              
+                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                                <div>Created: {new Date(job.created_at).toLocaleString()}</div>
+                                <div>Updated: {new Date(job.updated_at).toLocaleString()}</div>
+                                {job.error_count > 0 && (
+                                  <div className="text-orange-600">Errors: {job.error_count}</div>
+                                )}
+                              </div>
+                              
+                              {/* Show results if completed */}
+                              {job.results && job.results.length > 0 && (
+                                <div className="mt-4">
+                                  <h4 className="text-sm font-medium mb-2">Generated Images</h4>
+                                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                    {job.results.flatMap(result => 
+                                      result.images.map(image => (
+                                        <div key={image.id} className="relative group">
+                                          <Image
+                                            src={image.presigned_url}
+                                            alt={image.prompt}
+                                            width={100}
+                                            height={100}
+                                            className="rounded-md object-cover"
+                                          />
+                                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <Button
+                                              size="sm"
+                                              variant="secondary"
+                                              onClick={() => downloadImage(image)}
+                                            >
+                                              <Download className="w-3 h-3" />
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   )
 }

@@ -14,6 +14,7 @@ from ..models.user import User
 from ..models.generated_image import GeneratedImage as DBGeneratedImage
 from ..services.bedrock import bedrock_service
 from ..services.s3 import s3_service
+from ..services.prompt_engineering import prompt_engineering_service, ImageQuality, ImageStyle, CompositionRule
 from ..core.config import get_settings
 from ..core.pricing import calculate_generation_cost
 from ..core.auth import get_current_active_user
@@ -24,7 +25,7 @@ settings = get_settings()
 
 
 async def validate_generation_request(request: GenerateRequest) -> GenerateRequest:
-    """Validate and enhance generation request."""
+    """Validate and enhance generation request with professional standards."""
     # Check image count limit
     if request.num_images > settings.max_images_per_request:
         raise HTTPException(
@@ -32,7 +33,8 @@ async def validate_generation_request(request: GenerateRequest) -> GenerateReque
             detail=f"Maximum {settings.max_images_per_request} images per request"
         )
     
-    # Apply template if specified
+    # Get template enhancement parameters
+    template_enhancement = {}
     if request.template_id:
         try:
             template = await get_template(request.template_id)
@@ -41,8 +43,50 @@ async def validate_generation_request(request: GenerateRequest) -> GenerateReque
                 request.negative_prompt = template.negative_prompt
             if request.size == "1024x1024" and template.default_size != "1024x1024":
                 request.size = template.default_size
+            
+            # Get professional enhancement parameters for this template
+            template_enhancement = prompt_engineering_service.get_template_enhancement(request.template_id)
+            
         except HTTPException:
             logger.warning(f"Template {request.template_id} not found, proceeding without template")
+    
+    # Determine professional parameters based on context
+    quality = ImageQuality.PROFESSIONAL if request.template_id else ImageQuality.HIGH
+    style = ImageStyle.MARKETING if request.template_id else ImageStyle.PHOTOREALISTIC
+    composition = None
+    lighting = "professional"
+    
+    # Override with template-specific parameters
+    if template_enhancement:
+        quality = template_enhancement.get("quality", quality)
+        style = template_enhancement.get("style", style)
+        composition = template_enhancement.get("composition", composition)
+        lighting = template_enhancement.get("lighting", lighting)
+    
+    # Enhance the prompt with professional standards
+    enhanced_prompt = prompt_engineering_service.enhance_prompt(
+        base_prompt=request.prompt,
+        quality=quality,
+        style=style,
+        composition=composition,
+        lighting=lighting,
+        brand_style=request.brand_style,
+        template_context=template_enhancement.get("context")
+    )
+    
+    # Generate professional negative prompt
+    enhanced_negative = prompt_engineering_service.generate_negative_prompt(
+        base_negative=request.negative_prompt,
+        style=style,
+        additional_exclusions=[]
+    )
+    
+    # Update request with enhanced prompts
+    request.prompt = enhanced_prompt
+    request.negative_prompt = enhanced_negative
+    
+    logger.info(f"Enhanced prompt: {enhanced_prompt[:100]}...")
+    logger.info(f"Enhanced negative: {enhanced_negative[:100]}...")
     
     return request
 
@@ -50,11 +94,13 @@ async def validate_generation_request(request: GenerateRequest) -> GenerateReque
 @router.post("/generate", response_model=GenerateResponse, status_code=201)
 async def generate_images(
     payload: GenerateRequest,
-    validated_request: GenerateRequest = Depends(validate_generation_request),
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ) -> GenerateResponse:
     """Generate images using Bedrock and store them in S3."""
+    
+    # Validate the request
+    validated_request = await validate_generation_request(payload)
     
     start_time = time.time()
     

@@ -12,6 +12,11 @@ export interface GenerateRequest {
   seed?: number;
   template_id?: string;
   brand_style?: Record<string, any>;
+  // Professional quality parameters
+  quality?: string;
+  style?: string;
+  composition?: string;
+  lighting?: string;
 }
 
 export interface GeneratedImage {
