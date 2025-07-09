@@ -82,52 +82,35 @@ class PromptEngineeringService:
         template_context: Optional[str] = None
     ) -> str:
         """
-        Enhance a base prompt with professional standards and guidelines.
+        Minimally enhance a base prompt while preserving user intent.
         
         Args:
-            base_prompt: The original prompt
-            quality: Quality level for the image
-            style: Style category for the image
-            composition: Composition rule to apply
-            lighting: Lighting preset to use
-            brand_style: Brand style parameters
+            base_prompt: The original prompt (preserved as-is)
             template_context: Template-specific context
+            brand_style: Brand style parameters
             
         Returns:
-            Enhanced prompt following professional guidelines
+            Lightly enhanced prompt preserving user intent
         """
         
-        # Clean and normalize base prompt
-        enhanced_prompt = self._clean_prompt(base_prompt)
+        # Keep user's original prompt as the primary content
+        enhanced_prompt = base_prompt.strip()
         
-        # Add template context if provided
-        if template_context:
-            enhanced_prompt = f"{template_context}, {enhanced_prompt}"
+        # Only add minimal, contextual improvements
+        if template_context and "email" in template_context.lower():
+            enhanced_prompt += ", abstract graphic design"
+        elif template_context and "social" in template_context.lower():
+            enhanced_prompt += ", clean modern design"
+        elif template_context and "website" in template_context.lower():
+            enhanced_prompt += ", professional web design"
+        else:
+            enhanced_prompt += ", high quality"
         
-        # Add quality modifiers
-        quality_terms = self.quality_modifiers[quality]
-        enhanced_prompt += f", {', '.join(quality_terms)}"
-        
-        # Add style modifiers
-        style_terms = self.style_modifiers[style]
-        enhanced_prompt += f", {', '.join(style_terms)}"
-        
-        # Add composition rules
-        if composition:
-            comp_rule = self.composition_rules[composition]
-            enhanced_prompt += f", {comp_rule}"
-        
-        # Add lighting
-        if lighting in self.lighting_presets:
-            lighting_desc = self.lighting_presets[lighting]
-            enhanced_prompt += f", {lighting_desc}"
-        
-        # Add brand style integration
-        if brand_style:
-            enhanced_prompt = self._integrate_brand_style(enhanced_prompt, brand_style)
-        
-        # Add professional photography standards
-        enhanced_prompt += ", professional composition, perfect focus, clean aesthetic"
+        # Add brand style integration (minimal)
+        if brand_style and brand_style.get("keywords"):
+            # Only add the first brand keyword to avoid over-enhancement
+            first_keyword = brand_style["keywords"][0]
+            enhanced_prompt += f", {first_keyword}"
         
         return enhanced_prompt
 
@@ -164,7 +147,10 @@ class PromptEngineeringService:
         elif style == ImageStyle.MARKETING:
             negative_terms.extend([
                 "unprofessional", "amateur composition", "poor brand representation",
-                "inconsistent messaging", "cluttered design"
+                "inconsistent messaging", "cluttered design", "people", "person", "human", 
+                "face", "faces", "man", "woman", "child", "body", "hands", "eyes", "mouth", 
+                "nose", "hair", "portrait", "model", "photorealistic", "realistic", 
+                "natural lighting", "studio lighting", "photography"
             ])
         elif style == ImageStyle.PHOTOREALISTIC:
             negative_terms.extend([
