@@ -96,9 +96,8 @@ def test_model_access(model_id):
             test_payload = {
                 "text_prompts": [{"text": "test", "weight": 1.0}],
                 "cfg_scale": 7.5,
-                "steps": 10,  # Minimum steps for Stable Diffusion
+                "steps": 1,  # Minimal steps for testing
                 "samples": 1,
-                "style_preset": "photographic",
                 "width": 512,
                 "height": 512,
             }

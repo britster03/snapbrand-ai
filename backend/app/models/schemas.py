@@ -122,6 +122,43 @@ class ErrorResponse(BaseModel):
     details: Optional[Dict[str, Any]] = Field(None, description="Additional error details")
 
 
+class VectorGenerateRequest(BaseModel):
+    """Schema for vector image generation request."""
+
+    prompt: str = Field(..., min_length=1, max_length=1000, description="Base prompt describing the vector image")
+    negative_prompt: Optional[str] = Field(
+        None, max_length=500, description="Concepts to avoid during generation"
+    )
+    num_images: int = Field(1, ge=1, le=10, description="Number of vector images to generate")
+    size: str = Field("512x512", pattern=r"^\d{3,4}x\d{3,4}$")
+    style: str = Field("modern", description="Vector style (modern, minimalist, artistic, geometric, organic)")
+    seed: Optional[int] = Field(None, ge=0, description="Random seed for reproducibility")
+    format: str = Field("svg", pattern="^(svg|base64)$", description="Output format")
+
+
+class GeneratedVector(BaseModel):
+    """Schema for a generated vector image response."""
+    
+    id: str = Field(..., description="Unique vector image ID")
+    svg_content: Optional[str] = Field(None, description="Raw SVG content")
+    svg_base64: Optional[str] = Field(None, description="Base64 encoded SVG")
+    s3_url: Optional[HttpUrl] = Field(None, description="Direct S3 URL if stored")
+    presigned_url: Optional[HttpUrl] = Field(None, description="Pre-signed download URL if stored")
+    prompt: str = Field(..., description="Prompt used for generation")
+    size: str = Field(..., description="Vector image dimensions")
+    style: str = Field(..., description="Applied style")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Additional metadata")
+
+
+class VectorGenerateResponse(BaseModel):
+    """Schema for vector image generation response."""
+    
+    vectors: List[GeneratedVector] = Field(..., description="Generated vector images")
+    total_cost: Optional[float] = Field(None, description="Estimated cost in USD")
+    processing_time: Optional[float] = Field(None, description="Processing time in seconds")
+
+
 class HealthResponse(BaseModel):
     """Schema for health check response."""
     

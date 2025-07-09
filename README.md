@@ -5,11 +5,19 @@
 ## 🌟 Key Features
 
 ### 🎨 Professional Image Generation
+- **Amazon Titan V2**: Latest generation AI model with superior prompt adherence and quality
 - **Advanced Prompt Engineering**: Industry-standard prompt enhancement with professional guidelines
 - **Quality Controls**: 4 quality levels (Standard, High, Ultra, Professional) with automated validation
 - **Style Categories**: Photorealistic, Artistic, Technical, Marketing, Product Photography
 - **Composition Rules**: Rule of thirds, Golden ratio, Leading lines, Symmetry, Center composition
 - **Lighting Presets**: Professional, Studio, Natural, Dramatic, Soft, Golden hour
+
+### 🖼️ Vector Image Generation
+- **SVG Generation**: Create scalable vector graphics from text prompts
+- **Vector Styles**: Modern, Minimalist, Artistic, Geometric, Organic
+- **Multiple Formats**: Raw SVG or Base64 encoded output
+- **Intelligent Design**: Automatic color and shape extraction from prompts
+- **Professional Quality**: Clean, scalable graphics perfect for branding
 
 ### 🏢 Brand Consistency
 - **Brand Asset Management**: Upload and manage logos, color palettes, sample images
@@ -37,7 +45,8 @@
 Frontend (Next.js)     Backend (FastAPI)       AWS Services
 ├── Dashboard          ├── Generation API      ├── Bedrock (AI Models)
 ├── Generate Page      ├── Template System     ├── S3 (Storage)
-├── Brand Assets       ├── Prompt Engineering  └── IAM (Security)
+├── Vector Generate    ├── Vector Engine       └── IAM (Security)
+├── Brand Assets       ├── Prompt Engineering
 ├── Batch Processing   ├── Quality Validation
 └── Analytics          └── Cost Tracking
 ```
@@ -136,6 +145,10 @@ npm run dev
 - `POST /v1/generate` - Generate images with professional enhancement
 - `GET /v1/generate/status` - Check generation service status
 
+### Vector Generation
+- `POST /v1/vector/generate` - Generate vector images (SVG format)
+- `GET /v1/vector/health` - Check vector generation service status
+
 ### Templates
 - `GET /v1/templates` - List available templates
 - `GET /v1/templates/{id}` - Get specific template
@@ -220,7 +233,7 @@ AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_REGION=us-east-1
 S3_BUCKET_NAME=your-bucket-name
-BEDROCK_MODEL_ID=stability.stable-diffusion-xl-v1
+BEDROCK_MODEL_ID=amazon.titan-image-generator-v2:0
 
 # Database
 DATABASE_URL=sqlite:///./snapbrand.db

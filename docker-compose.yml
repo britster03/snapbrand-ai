@@ -15,7 +15,7 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
-      - BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID:-stability.stable-diffusion-xl-v1}
+      - BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID:-amazon.titan-image-generator-v2:0}
       - S3_BUCKET_NAME=${S3_BUCKET_NAME:-snapbrand-assets}
       - CORS_ORIGINS=["http://localhost:3000", "http://localhost:3001"]
       - API_KEYS=${API_KEYS:-[]}

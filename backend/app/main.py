@@ -2,6 +2,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from loguru import logger
+from typing import Dict
 
 from .core.config import Settings
 from .core.middleware import setup_cors_middleware, setup_rate_limit_middleware, setup_api_key_middleware
@@ -12,6 +13,7 @@ from .routes.templates import router as templates_router
 from .routes.batch import router as batch_router
 from .routes.auth import router as auth_router
 from .routes.images import router as images_router
+from .routes.vector import router as vector_router
 from .models.database import init_db
 
 settings = Settings()
@@ -55,6 +57,7 @@ app.include_router(assets_router)
 app.include_router(templates_router)
 app.include_router(batch_router)
 app.include_router(images_router)
+app.include_router(vector_router)
 
 
 @app.get("/health", tags=["health"])
@@ -142,7 +145,7 @@ async def health_check() -> dict:
 
 
 @app.get("/", tags=["root"])
-async def root() -> dict[str, str]:
+async def root() -> Dict[str, str]:
     """Root endpoint with API information."""
     return {
         "name": settings.app_name,

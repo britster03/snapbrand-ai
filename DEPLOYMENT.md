@@ -118,7 +118,7 @@ aws apprunner update-service \
         "RuntimeEnvironmentVariables": {
           "S3_BUCKET_NAME": "'$S3_BUCKET'",
           "AWS_REGION": "us-east-1",
-          "BEDROCK_MODEL_ID": "stability.stable-diffusion-xl-v1",
+          "BEDROCK_MODEL_ID": "amazon.titan-image-generator-v2:0",
           "LOG_LEVEL": "INFO"
         }
       }
