@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Auth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .token-display {
+            word-break: break-all;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Frontend Authentication Test</h1>
+        <p>This page tests the authentication fixes for the SnapBrand.ai frontend.</p>
+        
+        <div class="test-section">
+            <h3>Current Authentication State</h3>
+            <div id="auth-status">Loading...</div>
+            <div id="token-display" class="token-display"></div>
+            <button onclick="checkAuthState()">Refresh Auth State</button>
+            <button onclick="clearAuth()">Clear Auth</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>Login Test</h3>
+            <input type="text" id="username" placeholder="Username" value="test@snapbrand.ai">
+            <input type="password" id="password" placeholder="Password" value="password123">
+            <button onclick="testLogin()">Login</button>
+            <button onclick="testLogout()">Logout</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>Brand Profiles Test</h3>
+            <button onclick="fetchBrands()">Fetch Brand Profiles</button>
+            <button onclick="createTestBrand()">Create Test Brand</button>
+            <div id="brands-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test Log</h3>
+            <div id="test-log" class="log"></div>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let authToken = null;
+
+        function log(message) {
+            const logElement = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '';
+        }
+
+        function getToken() {
+            return localStorage.getItem('access_token');
+        }
+
+        function setToken(token) {
+            if (token) {
+                localStorage.setItem('access_token', token);
+                authToken = token;
+            } else {
+                localStorage.removeItem('access_token');
+                authToken = null;
+            }
+        }
+
+        function checkAuthState() {
+            const token = getToken();
+            const statusElement = document.getElementById('auth-status');
+            const tokenElement = document.getElementById('token-display');
+            
+            if (token && token !== 'null' && token !== 'undefined') {
+                statusElement.innerHTML = '<span style="color: green;">✓ Authenticated</span>';
+                tokenElement.innerHTML = `Token: ${token.substring(0, 50)}...`;
+                authToken = token;
+            } else {
+                statusElement.innerHTML = '<span style="color: red;">✗ Not authenticated</span>';
+                tokenElement.innerHTML = 'No token';
+                authToken = null;
+            }
+            
+            log(`Auth check: ${authToken ? 'Authenticated' : 'Not authenticated'}`);
+        }
+
+        function clearAuth() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            authToken = null;
+            checkAuthState();
+            log('Auth cleared');
+        }
+
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                log(`Attempting login for: ${username}`);
+                
+                const response = await fetch(`${API_URL}/v1/auth/login/json`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    setToken(data.access_token);
+                    log('✓ Login successful');
+                    checkAuthState();
+                } else {
+                    const error = await response.json();
+                    log(`✗ Login failed: ${error.detail || 'Unknown error'}`);
+                }
+            } catch (error) {
+                log(`✗ Login error: ${error.message}`);
+            }
+        }
+
+        async function testLogout() {
+            clearAuth();
+            log('Logged out');
+        }
+
+        async function fetchBrands() {
+            const token = getToken();
+            const resultElement = document.getElementById('brands-result');
+            
+            if (!token || token === 'null' || token === 'undefined') {
+                log('✗ No token available for brands fetch');
+                resultElement.innerHTML = '<span style="color: red;">No token available</span>';
+                return;
+            }
+            
+            try {
+                log('Fetching brand profiles...');
+                
+                const response = await fetch(`${API_URL}/brands/profiles`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+                
+                if (response.ok) {
+                    const brands = await response.json();
+                    log(`✓ Brands fetched successfully: ${brands.length} brands`);
+                    resultElement.innerHTML = `<span style="color: green;">✓ ${brands.length} brands found</span>`;
+                } else {
+                    const error = await response.json();
+                    log(`✗ Brands fetch failed: ${error.detail || error.error || 'Unknown error'}`);
+                    resultElement.innerHTML = `<span style="color: red;">✗ ${error.detail || error.error || 'Unknown error'}</span>`;
+                }
+            } catch (error) {
+                log(`✗ Brands fetch error: ${error.message}`);
+                resultElement.innerHTML = `<span style="color: red;">✗ ${error.message}</span>`;
+            }
+        }
+
+        async function createTestBrand() {
+            const token = getToken();
+            const resultElement = document.getElementById('brands-result');
+            
+            if (!token || token === 'null' || token === 'undefined') {
+                log('✗ No token available for brand creation');
+                resultElement.innerHTML = '<span style="color: red;">No token available</span>';
+                return;
+            }
+            
+            try {
+                log('Creating test brand...');
+                
+                const brandData = {
+                    name: `Test Brand ${Date.now()}`,
+                    description: 'A test brand created by the auth test',
+                    industry: 'technology',
+                    visual_style: 'modern',
+                    brand_keywords: ['test', 'demo', 'auth']
+                };
+                
+                const response = await fetch(`${API_URL}/brands/profiles`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(brandData)
+                });
+                
+                if (response.ok) {
+                    const newBrand = await response.json();
+                    log(`✓ Brand created successfully: ${newBrand.name}`);
+                    resultElement.innerHTML = `<span style="color: green;">✓ Brand created: ${newBrand.name}</span>`;
+                } else {
+                    const error = await response.json();
+                    log(`✗ Brand creation failed: ${error.detail || error.error || 'Unknown error'}`);
+                    resultElement.innerHTML = `<span style="color: red;">✗ ${error.detail || error.error || 'Unknown error'}</span>`;
+                }
+            } catch (error) {
+                log(`✗ Brand creation error: ${error.message}`);
+                resultElement.innerHTML = `<span style="color: red;">✗ ${error.message}</span>`;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthState();
+            log('Frontend auth test page loaded');
+        });
+    </script>
+</body>
+</html>

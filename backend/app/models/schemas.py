@@ -6,6 +6,23 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, HttpUrl, validator
 
 
+class UserOut(BaseModel):
+    """Schema for user output."""
+    
+    id: str = Field(..., description="User ID")
+    email: str = Field(..., description="User email")
+    username: str = Field(..., description="Username")
+    full_name: Optional[str] = Field(None, description="Full name")
+    is_active: bool = Field(True, description="Whether user is active")
+    is_premium: bool = Field(False, description="Whether user has premium subscription")
+    total_images_generated: int = Field(0, description="Total images generated")
+    total_cost_spent: str = Field("0.00", description="Total cost spent")
+    created_at: datetime = Field(..., description="Account creation date")
+    
+    class Config:
+        from_attributes = True
+
+
 class GenerateRequest(BaseModel):
     """Schema for image generation request."""
 
@@ -19,6 +36,7 @@ class GenerateRequest(BaseModel):
     seed: Optional[int] = Field(None, ge=0)
     template_id: Optional[str] = Field(None, description="Template ID to use for generation")
     brand_style: Optional[Dict[str, Any]] = Field(None, description="Brand style parameters")
+    campaign_id: Optional[int] = Field(None, description="Campaign ID to associate with generated images")
     
     # Professional quality parameters
     quality: Optional[str] = Field(None, description="Image quality level (standard, high, ultra, professional)")

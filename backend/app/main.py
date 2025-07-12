@@ -14,6 +14,9 @@ from .routes.batch import router as batch_router
 from .routes.auth import router as auth_router
 from .routes.images import router as images_router
 from .routes.vector import router as vector_router
+from .routes.brand import router as brand_router
+from .routes.collaboration import router as collaboration_router
+from .routes.analytics import router as analytics_router
 from .models.database import init_db
 
 settings = Settings()
@@ -58,6 +61,9 @@ app.include_router(templates_router)
 app.include_router(batch_router)
 app.include_router(images_router)
 app.include_router(vector_router)
+app.include_router(brand_router)
+app.include_router(collaboration_router)
+app.include_router(analytics_router)
 
 
 @app.get("/health", tags=["health"])

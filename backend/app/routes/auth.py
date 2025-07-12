@@ -114,4 +114,28 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
 @router.get("/api-key")
 async def get_api_key(current_user: User = Depends(get_current_active_user)):
     """Get current user's API key."""
-    return {"api_key": current_user.api_key} 
+    return {"api_key": current_user.api_key}
+
+
+@router.post("/refresh", response_model=Token)
+async def refresh_token(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Refresh the current user's access token."""
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": current_user.id}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/validate")
+async def validate_token(current_user: User = Depends(get_current_active_user)):
+    """Validate the current token and return user info."""
+    return {
+        "valid": True,
+        "user_id": current_user.id,
+        "email": current_user.email,
+        "username": current_user.username
+    } 

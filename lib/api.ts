@@ -370,6 +370,47 @@ class ApiClient {
     return this.request('/v1/images/stats/summary');
   }
 
+  // Brand Management
+  async getBrandProfiles(): Promise<any[]> {
+    return this.request('/brands/profiles');
+  }
+
+  async createBrandProfile(brandData: any): Promise<any> {
+    return this.request('/brands/profiles', {
+      method: 'POST',
+      body: JSON.stringify(brandData),
+    });
+  }
+
+  async getBrandProfile(brandId: number): Promise<any> {
+    return this.request(`/brands/profiles/${brandId}`);
+  }
+
+  async updateBrandProfile(brandId: number, brandData: any): Promise<any> {
+    return this.request(`/brands/profiles/${brandId}`, {
+      method: 'PUT',
+      body: JSON.stringify(brandData),
+    });
+  }
+
+  async deleteBrandProfile(brandId: number): Promise<{ message: string }> {
+    return this.request(`/brands/profiles/${brandId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getBrandAssets(brandId: number): Promise<any[]> {
+    return this.request(`/brands/profiles/${brandId}/assets`);
+  }
+
+  async getBrandInsights(brandId: number): Promise<any> {
+    return this.request(`/brands/profiles/${brandId}/insights`);
+  }
+
+  async getBrandCampaigns(brandId: number): Promise<any[]> {
+    return this.request(`/brands/profiles/${brandId}/campaigns`);
+  }
+
   // Utility methods
   async uploadFile(uploadUrl: string, file: File): Promise<void> {
     await fetch(uploadUrl, {

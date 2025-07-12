@@ -30,6 +30,8 @@ class User(Base):
     # Relationships
     generated_images = relationship("GeneratedImage", back_populates="user", cascade="all, delete-orphan")
     batch_jobs = relationship("BatchJob", back_populates="user", cascade="all, delete-orphan")
+    brand_profiles = relationship("BrandProfile", back_populates="user", cascade="all, delete-orphan")
+    campaigns = relationship("Campaign", back_populates="user", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<User(id={self.id}, email={self.email}, username={self.username})>" 

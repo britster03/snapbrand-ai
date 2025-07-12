@@ -18,7 +18,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 settings = get_settings()
 SECRET_KEY = settings.secret_key if hasattr(settings, 'secret_key') else "your-secret-key-change-in-production"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = getattr(settings, 'access_token_expire_minutes', 30)
 
 # Security schemes
 security = HTTPBearer()
@@ -40,7 +40,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -54,7 +54,7 @@ def verify_token(token: str) -> Optional[str]:
         if user_id is None:
             return None
         return user_id
-    except JWTError:
+    except JWTError as e:
         return None
 
 
@@ -85,6 +85,14 @@ def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    
+    # Check if token is null or invalid
+    if not credentials.credentials or credentials.credentials == "null" or credentials.credentials == "undefined":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token is null or undefined. Please login again.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     
     user_id = verify_token(credentials.credentials)
     if user_id is None:

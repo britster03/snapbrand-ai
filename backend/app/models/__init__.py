@@ -4,6 +4,16 @@ from .user import User
 from .generated_image import GeneratedImage
 from .template import Template
 from .batch_job import BatchJob
+from .brand import (
+    BrandProfile, 
+    BrandAsset, 
+    BrandGuideline, 
+    Campaign, 
+    PerformanceMetric,
+    TeamMember,
+    ApprovalWorkflow,
+    Industry
+)
 
 __all__ = [
     "Base",
@@ -12,4 +22,12 @@ __all__ = [
     "GeneratedImage",
     "Template",
     "BatchJob",
+    "BrandProfile",
+    "BrandAsset",
+    "BrandGuideline",
+    "Campaign",
+    "PerformanceMetric",
+    "TeamMember",
+    "ApprovalWorkflow",
+    "Industry",
 ] 

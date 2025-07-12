@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, ApiClient } from '../lib/api';
+import { AuthUtils } from '../lib/auth-utils';
 
 interface AuthContextType {
   user: User | null;
@@ -25,16 +26,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const currentUser = await apiClient.getCurrentUser();
       setUser(currentUser);
+      AuthUtils.setUser(currentUser);
     } catch (error) {
       console.error('Failed to fetch user:', error);
       setUser(null);
-      apiClient.clearAccessToken();
+      AuthUtils.clearAuth();
     }
   };
 
   useEffect(() => {
-    const token = apiClient.getAccessToken();
+    // Sync token on init
+    AuthUtils.syncToken();
+    
+    const token = AuthUtils.getToken();
     if (token) {
+      // Try to load user from localStorage first
+      const cachedUser = AuthUtils.getUser();
+      if (cachedUser) {
+        setUser(cachedUser);
+      }
+      
+      // Then fetch fresh user data
       refetchUser().finally(() => setIsLoading(false));
     } else {
       setIsLoading(false);
@@ -43,7 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      await apiClient.login({ username, password });
+      const response = await apiClient.login({ username, password });
+      AuthUtils.setToken(response.access_token);
       await refetchUser();
     } catch (error) {
       console.error('Login failed:', error);
@@ -60,6 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         full_name: fullName,
       });
       setUser(newUser);
+      AuthUtils.setUser(newUser);
       // After registration, login automatically
       await login(username, password);
     } catch (error) {
@@ -69,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    apiClient.logout();
+    AuthUtils.clearAuth();
     setUser(null);
   };
 

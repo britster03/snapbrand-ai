@@ -26,6 +26,10 @@ class GeneratedImage(Base):
     seed = Column(Integer, nullable=True)
     template_id = Column(String, ForeignKey("templates.id"), nullable=True)
     
+    # Brand and campaign associations
+    brand_profile_id = Column(Integer, ForeignKey("brand_profiles.id"), nullable=True)
+    campaign_id = Column(Integer, ForeignKey("campaigns.id"), nullable=True)
+    
     # Batch information
     batch_id = Column(String, ForeignKey("batch_jobs.id"), nullable=True)
     batch_index = Column(Integer, nullable=True)
@@ -49,6 +53,10 @@ class GeneratedImage(Base):
     user = relationship("User", back_populates="generated_images")
     template = relationship("Template", back_populates="generated_images")
     batch_job = relationship("BatchJob", back_populates="generated_images")
+    brand_profile = relationship("BrandProfile")
+    campaign = relationship("Campaign", back_populates="generated_images")
+    performance_metrics = relationship("PerformanceMetric", back_populates="generated_image", cascade="all, delete-orphan")
+    approval_workflow = relationship("ApprovalWorkflow", back_populates="generated_image", uselist=False)
     
     def __repr__(self):
         return f"<GeneratedImage(id={self.id}, user_id={self.user_id}, prompt={self.prompt[:50]}...)>" 
