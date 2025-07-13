@@ -179,30 +179,35 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Demo Placeholder 1 - Video/Image Support */}
+            {/* Demo Video - Screen Capture */}
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
                 <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  {/* Placeholder for video/image - Replace with your content */}
-                  <div className="text-center space-y-2">
-                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
-                    <p className="text-sm text-gray-500">Video/Image Placeholder 1</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Demo Placeholder 2 - Video/Image Support */}
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-              <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  {/* Placeholder for video/image - Replace with your content */}
-                  <div className="text-center space-y-2">
-                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
-                    <p className="text-sm text-gray-500">Video/Image Placeholder 2</p>
-                  </div>
+                  <video 
+                    className="w-full h-full object-cover rounded-xl"
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline
+                    style={{ 
+                      filter: 'brightness(1.05) contrast(1.1)'
+                    }}
+                    onLoadedData={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      video.playbackRate = 1.75;
+                    }}
+                    onCanPlay={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      video.playbackRate = 1.75;
+                    }}
+                  >
+                    <source src="/screen-capture.webm" type="video/webm" />
+                    <div className="text-center space-y-2">
+                      <Play className="w-12 h-12 text-gray-400 mx-auto" />
+                      <p className="text-sm text-gray-500">Video not supported in your browser</p>
+                    </div>
+                  </video>
                 </div>
               </div>
             </div>
@@ -213,24 +218,51 @@ export default function LandingPage() {
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
                 <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                   {/* Placeholder for video/image - Replace with your content */}
-                  <div className="text-center space-y-2">
-                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
-                    <p className="text-sm text-gray-500">Video/Image Placeholder 3</p>
-                  </div>
+                  <img src="/demo2.png" alt="Screenshot" className="mx-auto" />
+                </div>
+              </div>
+            </div>
+
+            {/* Demo Placeholder 3 - Video/Image Support */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  {/* Placeholder for video/image - Replace with your content */}
+                  <img src="/demo1.png" alt="Screenshot" className="mx-auto" />
                 </div>
               </div>
             </div>
 
             {/* Demo Placeholder 4 - Video/Image Support */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
                 <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  {/* Placeholder for video/image - Replace with your content */}
-                  <div className="text-center space-y-2">
-                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
-                    <p className="text-sm text-gray-500">Video/Image Placeholder 4</p>
-                  </div>
+                  <video 
+                    className="w-full h-full object-cover rounded-xl"
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline
+                    style={{ 
+                      filter: 'brightness(1.05) contrast(1.1)'
+                    }}
+                    onLoadedData={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      video.playbackRate = 1.75;
+                    }}
+                    onCanPlay={(e) => {
+                      const video = e.target as HTMLVideoElement;
+                      video.playbackRate = 1.75;
+                    }}
+                  >
+                    <source src="/screen-capture.webm" type="video/webm" />
+                    <div className="text-center space-y-2">
+                      <Play className="w-12 h-12 text-gray-400 mx-auto" />
+                      <p className="text-sm text-gray-500">Video not supported in your browser</p>
+                    </div>
+                  </video>
                 </div>
               </div>
             </div>
@@ -411,6 +443,9 @@ export default function LandingPage() {
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
                   <Upload className="w-10 h-10 text-white" />
                 </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  1
+                </div>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">
                 Upload Brand Assets
@@ -493,7 +528,7 @@ export default function LandingPage() {
               className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
             >
               <MessageSquare className="w-5 h-5 mr-2" />
-              Contact Sales
+              Beta Access Coming Soon 🌐
             </Button>
           </div>
         </div>
