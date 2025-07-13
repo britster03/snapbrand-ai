@@ -1,6 +1,9 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 import {
   ArrowRight,
   Sparkles,
@@ -12,89 +15,216 @@ import {
   Download,
   BarChart3,
   CheckCircle,
+  Upload,
+  Wand2,
+  Layers,
+  RefreshCw,
+  MessageSquare,
+  Play,
+  Users,
+  Clock,
+  TrendingUp,
+  Star,
+  Code,
+  Cpu,
+  Shield,
+  Workflow,
+  Image as ImageIcon,
+  FileImage,
+  Paintbrush,
+  Settings,
+  Database,
+  CloudUpload,
+  Gauge,
+  Brain,
+  Lightbulb,
+  Rocket,
+  Award,
+  ChevronRight,
+  ExternalLink,
+  Menu,
+  X,
+  Heart
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useState } from "react"
 
 export default function LandingPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 transition-all duration-300">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <Sparkles className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              imagifyy.ai
-            </span>
+            <div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                SnapBrand.ai
+              </span>
+              <div className="text-xs text-gray-500 font-medium">Professional AI Image Generation</div>
+            </div>
           </div>
+          
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href="#features" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
               Features
             </Link>
-            <Link href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors">
-              Pricing
+            <Link href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+              How It Works
             </Link>
-            <Link href="#api" className="text-gray-600 hover:text-gray-900 transition-colors">
-              API
-            </Link>
-            <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
               Dashboard
             </Link>
           </nav>
+          
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" className="hidden md:flex hover:bg-blue-50 transition-colors duration-300" asChild>
               <Link href="/login">Sign In</Link>
             </Button>
-            <Button asChild>
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl" asChild>
               <Link href="/dashboard">
                 Get Started <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
           </div>
         </div>
+        
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t bg-white/95 backdrop-blur-sm">
+            <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+              <Link href="#features" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+                Features
+              </Link>
+              <Link href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+                How It Works
+              </Link>
+              <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+                Dashboard
+              </Link>
+              <Separator />
+              <Link href="/login" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+                Sign In
+              </Link>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-purple-50/50 -z-10"></div>
         <div className="container mx-auto text-center max-w-6xl">
-          <Badge variant="secondary" className="mb-6 bg-blue-100 text-blue-700 border-blue-200">
-            <Sparkles className="w-4 h-4 mr-2" />
-            AI-Powered Brand Asset Studio
-          </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent leading-tight">
-            Generate On-Brand
-            <br />
-            Visuals at Scale
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Transform your brand guidelines into unlimited, professional-quality images. No photographer or designer
-            needed—just your vision and our AI.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="text-lg px-8 py-6" asChild>
-              <Link href="/dashboard">
-                Start Creating Free <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-6 bg-transparent">
-              Watch Demo <Camera className="w-5 h-5 ml-2" />
-            </Button>
+          <div className="max-w-4xl mx-auto mb-16">
+            <Badge variant="secondary" className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200 hover:scale-105 transition-transform duration-300">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Professional AI Image Generation Platform
+            </Badge>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent leading-tight animate-in fade-in-50 slide-in-from-bottom-10 duration-1000">
+              Generate Professional
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Brand-Consistent
+              </span>
+              <br />
+              Visuals at Scale
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed animate-in fade-in-50 slide-in-from-bottom-10 duration-1000 delay-200">
+              Transform your brand assets into unlimited, professional-quality images using Amazon Titan V2 AI. 
+              Built for production with industry-standard quality controls and transparent pricing.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-in fade-in-50 slide-in-from-bottom-10 duration-1000 delay-400">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group" 
+                asChild
+              >
+                <Link href="/dashboard" className="flex items-center">
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-lg mr-3">
+                    <Play className="w-4 h-4 text-blue-600" />
+                  </span>
+                  Start Creating Free
+                </Link>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 hover:scale-105 group"
+              >
+                <Camera className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                View Examples
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Demo Showcase Section */}
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50/30">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <Badge variant="secondary" className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200">
+              <Camera className="w-4 h-4 mr-2" />
+              See It In Action
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent">
+              Professional Results
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Made Simple
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Watch how SnapBrand.ai transforms your brand assets into stunning, professional-quality images
+            </p>
           </div>
 
-          {/* Hero Image */}
-          <div className="relative max-w-5xl mx-auto">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-1">
-              <div className="bg-white rounded-xl p-8">
-                <Image
-                  src="/placeholder.svg?height=600&width=1000"
-                  alt="imagifyy.ai Dashboard Preview"
-                  width={1000}
-                  height={600}
-                  className="rounded-lg shadow-2xl"
-                />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Demo Placeholder 1 */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+              </div>
+            </div>
+
+            {/* Demo Placeholder 2 */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+              </div>
+            </div>
+
+            {/* Demo Placeholder 3 */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+              </div>
+            </div>
+
+            {/* Demo Placeholder 4 */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
               </div>
             </div>
           </div>
@@ -105,229 +235,283 @@ export default function LandingPage() {
       <section id="features" className="py-20 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Everything You Need for Brand Consistency</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From brand asset ingestion to bulk generation, we've built every tool you need to scale your visual
-              content.
+            <Badge variant="secondary" className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200">
+              <Star className="w-4 h-4 mr-2" />
+              Production-Ready Features
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent">
+              Everything You Need for
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Professional Image Generation
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Built with industry-standard features and AWS infrastructure for reliable, scalable image generation
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-2 hover:border-blue-200 transition-colors" variant="gradient" animateHover>
-              <CardHeader>
-                <Palette className="w-12 h-12 text-blue-600 mb-4" />
-                <CardTitle>Brand Asset Ingestion</CardTitle>
-                <CardDescription>
-                  Upload logos, color palettes, and sample photos. Our AI learns your exact brand style.
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Amazon Titan V2 */}
+            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-blue-50 to-blue-100/50 hover:from-blue-100 hover:to-blue-200/50">
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Cpu className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors duration-300">
+                  Amazon Titan V2
+                </CardTitle>
+                <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                  Latest generation AI model with superior prompt adherence and professional-grade quality output
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center text-sm text-blue-600 font-medium group-hover:text-blue-700 transition-colors duration-300">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Enterprise-grade AI model
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-purple-200 transition-colors" variant="gradient" animateHover>
-              <CardHeader>
-                <Target className="w-12 h-12 text-purple-600 mb-4" />
-                <CardTitle>Template-Based Prompting</CardTitle>
-                <CardDescription>
-                  Pre-built templates for product shots, lifestyle scenes, social media, and more.
+            {/* Vector Generation */}
+            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-purple-50 to-purple-100/50 hover:from-purple-100 hover:to-purple-200/50">
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <FileImage className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-purple-700 transition-colors duration-300">
+                  Vector Generation
+                </CardTitle>
+                <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                  Create scalable SVG graphics with multiple styles: Modern, Minimalist, Artistic, Geometric
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center text-sm text-purple-600 font-medium group-hover:text-purple-700 transition-colors duration-300">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Scalable vector graphics
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-green-200 transition-colors" variant="gradient" animateHover>
-              <CardHeader>
-                <Globe className="w-12 h-12 text-green-600 mb-4" />
-                <CardTitle>Real-Time Context</CardTitle>
-                <CardDescription>
-                  Images adapt to weather, events, and holidays for timely, relevant campaigns.
+            {/* Quality Controls */}
+            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-amber-50 to-amber-100/50 hover:from-amber-100 hover:to-amber-200/50">
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg" style={{background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'}}>
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-amber-700 transition-colors duration-300">
+                  Quality Controls
+                </CardTitle>
+                <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                  4 quality levels with automated validation: Standard, High, Ultra, Professional
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center text-sm font-medium group-hover:text-amber-700 transition-colors duration-300" style={{color: '#f59e0b'}}>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Automated quality validation
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-orange-200 transition-colors" variant="gradient" animateHover>
-              <CardHeader>
-                <Zap className="w-12 h-12 text-orange-600 mb-4" />
-                <CardTitle>Batch Generation</CardTitle>
-                <CardDescription>
-                  Generate hundreds of variants instantly. Perfect for product catalogs and campaigns.
+            {/* Brand Management */}
+            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-orange-50 to-orange-100/50 hover:from-orange-100 hover:to-orange-200/50">
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg" style={{background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)'}}>
+                  <Palette className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-orange-700 transition-colors duration-300">
+                  Brand Management
+                </CardTitle>
+                <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                  Upload brand assets, manage color palettes, and maintain consistent visual identity
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center text-sm font-medium group-hover:text-orange-700 transition-colors duration-300" style={{color: '#ea580c'}}>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Consistent brand identity
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-red-200 transition-colors" variant="gradient" animateHover>
-              <CardHeader>
-                <BarChart3 className="w-12 h-12 text-red-600 mb-4" />
-                <CardTitle>Developer API</CardTitle>
-                <CardDescription>
-                  REST API for automation. Integrate with Shopify, WooCommerce, and your existing tools.
+            {/* Batch Processing */}
+            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-emerald-50 to-emerald-100/50 hover:from-emerald-100 hover:to-emerald-200/50">
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
+                  <Layers className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-emerald-700 transition-colors duration-300">
+                  Batch Processing
+                </CardTitle>
+                <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                  Generate multiple images efficiently with batch jobs and real-time progress tracking
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center text-sm font-medium group-hover:text-emerald-700 transition-colors duration-300" style={{color: '#10b981'}}>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Efficient bulk generation
+                </div>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-indigo-200 transition-colors" variant="gradient" animateHover>
-              <CardHeader>
-                <Download className="w-12 h-12 text-indigo-600 mb-4" />
-                <CardTitle>Export & Edit</CardTitle>
-                <CardDescription>
-                  Fine-tune with sliders, export high-res images, and get auto-generated alt-text.
+            {/* AWS Infrastructure */}
+            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-slate-50 to-slate-100/50 hover:from-slate-100 hover:to-slate-200/50">
+              <CardHeader className="pb-4">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg" style={{background: 'linear-gradient(135deg, #475569 0%, #334155 100%)'}}>
+                  <CloudUpload className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-slate-700 transition-colors duration-300">
+                  AWS Infrastructure
+                </CardTitle>
+                <CardDescription className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+                  Bedrock AI, S3 Storage, IAM Security - enterprise-grade infrastructure
                 </CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center text-sm font-medium group-hover:text-slate-700 transition-colors duration-300" style={{color: '#475569'}}>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Enterprise-grade security
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold mb-2">10K+</div>
-              <div className="text-blue-100">Images Generated</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">500+</div>
-              <div className="text-blue-100">Happy Brands</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">95%</div>
-              <div className="text-blue-100">Time Saved</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">24/7</div>
-              <div className="text-blue-100">AI Availability</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-20 px-4">
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50/30">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-xl text-gray-600">Choose the plan that fits your brand's needs</p>
+            <Badge variant="secondary" className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200">
+              <Workflow className="w-4 h-4 mr-2" />
+              Simple Process
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent">
+              How SnapBrand.ai Works
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              From brand asset upload to professional image generation—here's how our AI transforms your brand into unlimited visual content
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-2">
-              <CardHeader>
-                <CardTitle>Starter</CardTitle>
-                <CardDescription>Perfect for small businesses</CardDescription>
-                <div className="text-3xl font-bold">
-                  $29<span className="text-lg text-gray-500">/month</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Step 1 */}
+            <div className="text-center group">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+                  <Upload className="w-10 h-10 text-white" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    100 images/month
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Basic templates
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Brand asset upload
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    HD downloads
-                  </li>
-                </ul>
-                <Button className="w-full mt-6">Get Started</Button>
-              </CardContent>
-            </Card>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors duration-300">
+                Upload Brand Assets
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                Start by uploading your brand essentials: logos, color palettes, typography samples, and reference images that represent your brand style.
+              </p>
+            </div>
 
-            <Card className="border-2 border-blue-500 relative">
-              <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500">Most Popular</Badge>
-              <CardHeader>
-                <CardTitle>Professional</CardTitle>
-                <CardDescription>For growing brands</CardDescription>
-                <div className="text-3xl font-bold">
-                  $99<span className="text-lg text-gray-500">/month</span>
+            {/* Step 2 */}
+            <div className="text-center group">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+                  <Brain className="w-10 h-10 text-white" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    500 images/month
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    All templates
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Batch generation
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    API access
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Priority support
-                  </li>
-                </ul>
-                <Button className="w-full mt-6">Get Started</Button>
-              </CardContent>
-            </Card>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  2
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-700 transition-colors duration-300">
+                AI Analyzes Your Brand
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                Our advanced AI powered by Amazon Titan V2 analyzes your brand assets to understand your unique style, color preferences, and visual identity.
+              </p>
+            </div>
 
-            <Card className="border-2">
-              <CardHeader>
-                <CardTitle>Enterprise</CardTitle>
-                <CardDescription>For large organizations</CardDescription>
-                <div className="text-3xl font-bold">Custom</div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Unlimited images
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Custom templates
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    White-label option
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    Dedicated support
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
-                    SLA guarantee
-                  </li>
-                </ul>
-                <Button variant="outline" className="w-full mt-6 bg-transparent">
-                  Contact Sales
-                </Button>
-              </CardContent>
-            </Card>
+            {/* Step 3 */}
+            <div className="text-center group">
+              <div className="relative mb-6">
+              <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+                  <Wand2 className="w-10 h-10 text-white drop-shadow-lg" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  3
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors duration-300">
+                Generate Professional Images
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                Watch as AI creates multiple variations of your content in seconds. Fine-tune with our editing tools and choose your preferred quality level.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="text-center group">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-orange-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+                  <Download className="w-10 h-10 text-white" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  4
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-700 transition-colors duration-300">
+                Download & Use
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                Download high-resolution files ready for immediate use. Perfect for marketing campaigns, social media, or any professional application.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gray-900 text-white">
+      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Brand Visuals?</h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Join hundreds of brands already creating stunning, on-brand content with imagifyy.ai
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Transform Your Brand Visuals?
+          </h2>
+          <p className="text-xl mb-8 text-blue-100">
+            Join hundreds of businesses creating professional, on-brand content with AI
           </p>
-          <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
-            <Link href="/dashboard">
-              Start Your Free Trial <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl" 
+              asChild
+            >
+              <Link href="/dashboard">
+                <Play className="w-5 h-5 mr-2" />
+                Start Creating Free
+              </Link>
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              <MessageSquare className="w-5 h-5 mr-2" />
+              Contact Sales
+            </Button>
+          </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-sm text-gray-400">
+              © 2024 SnapBrand.ai. All rights reserved. Built with <Heart className="w-4 h-4 mx-1 text-red-500 inline" /> for professional image generation.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

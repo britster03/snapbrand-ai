@@ -9,7 +9,7 @@ import { ConditionalFooter } from '@/components/conditional-footer'
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "imagifyy.ai - AI-Powered Brand Asset Studio",
+  title: "SnapBrand.ai - AI-Powered Brand Asset Studio",
   description: "Generate on-brand visuals at scale with AI. No photographer or designer needed.",
     generator: 'v0.dev'
 }
