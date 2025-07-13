@@ -94,9 +94,107 @@ export default function BrandDetailPage() {
   const [uploading, setUploading] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
 
+  // Add state for campaigns and campaign dialog
+  const [campaigns, setCampaigns] = useState<any[]>([])
+  const [campaignDialogOpen, setCampaignDialogOpen] = useState(false)
+  const [creatingCampaign, setCreatingCampaign] = useState(false)
+  const [newCampaign, setNewCampaign] = useState({
+    name: "",
+    description: "",
+    campaign_type: "",
+    start_date: "",
+    end_date: "",
+    target_platforms: "",
+    target_metrics: ""
+  })
+
+  // Add state for campaign metrics
+  const [metrics, setMetrics] = useState({ engagement_rate: '', conversion_rate: '', reach: '' })
+
+  // Update newCampaign reset to clear metrics too
+  const resetNewCampaign = () => {
+    setNewCampaign({ name: '', description: '', campaign_type: '', start_date: '', end_date: '', target_platforms: '', target_metrics: '' })
+    setMetrics({ engagement_rate: '', conversion_rate: '', reach: '' })
+  }
+
   useEffect(() => {
     fetchBrandData()
   }, [brandId])
+
+  // Fetch campaigns
+  const fetchCampaigns = async () => {
+    try {
+      const token = AuthUtils.getToken()
+      if (!token) return
+      const headers = { Authorization: `Bearer ${token}` }
+      const response = await fetch(`${API_URL}/brands/profiles/${brandId}/campaigns`, { headers })
+      if (response.ok) {
+        const data = await response.json()
+        setCampaigns(data)
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  useEffect(() => {
+    fetchCampaigns()
+  }, [brandId])
+
+  // Create campaign handler
+  const handleCreateCampaign = async () => {
+    if (!newCampaign.name.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Campaign name is required.",
+        variant: "destructive"
+      })
+      return
+    }
+    setCreatingCampaign(true)
+    try {
+      const token = AuthUtils.getToken()
+      if (!token) {
+        toast({
+          title: "Authentication Error",
+          description: "You must be logged in to create a campaign.",
+          variant: "destructive"
+        })
+        setCreatingCampaign(false)
+        return
+      }
+      const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+      // Build metrics object from state, only include filled fields
+      const target_metrics = Object.fromEntries(
+        Object.entries(metrics).filter(([_, v]) => v !== '' && !isNaN(Number(v))).map(([k, v]) => [k, Number(v)])
+      )
+      const body = JSON.stringify({
+        ...newCampaign,
+        target_platforms: newCampaign.target_platforms.split(",").map((s) => s.trim()),
+        target_metrics
+      })
+      const response = await fetch(`${API_URL}/brands/profiles/${brandId}/campaigns`, {
+        method: "POST",
+        headers,
+        body
+      })
+      if (response.ok) {
+        setCampaignDialogOpen(false)
+        resetNewCampaign()
+        fetchCampaigns()
+        toast({ title: "Campaign created!" })
+      } else {
+        let errorMsg = "Failed to create campaign"
+        try {
+          const errorData = await response.json()
+          if (errorData && errorData.detail) errorMsg = errorData.detail
+        } catch {}
+        toast({ title: "Error", description: errorMsg, variant: "destructive" })
+      }
+    } catch (e: any) {
+      toast({ title: "Error", description: e?.message || "Failed to create campaign", variant: "destructive" })
+    } finally {
+      setCreatingCampaign(false)
+    }
+  }
 
   const fetchBrandData = async () => {
     try {
@@ -426,22 +524,26 @@ export default function BrandDetailPage() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-        <TabsList className="grid w-full grid-cols-4 h-12 bg-muted/30">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">
+        <TabsList className="flex w-full overflow-x-auto h-12 bg-muted/30 space-x-2">
+          <TabsTrigger value="overview" className="flex-shrink-0 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <Eye className="w-4 h-4 mr-2" />
             Overview
           </TabsTrigger>
-          <TabsTrigger value="assets" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">
+          <TabsTrigger value="assets" className="flex-shrink-0 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <Upload className="w-4 h-4 mr-2" />
             Assets ({assets.length})
           </TabsTrigger>
-          <TabsTrigger value="guidelines" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">
+          <TabsTrigger value="guidelines" className="flex-shrink-0 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <Shield className="w-4 h-4 mr-2" />
             Guidelines
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="data-[state=active]:bg-background data-[state=active]:shadow-sm">
+          <TabsTrigger value="analytics" className="flex-shrink-0 data-[state=active]:bg-background data-[state=active]:shadow-sm">
             <BarChart3 className="w-4 h-4 mr-2" />
             Analytics
+          </TabsTrigger>
+          <TabsTrigger value="campaigns" className="flex-shrink-0 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <Target className="w-4 h-4 mr-2" />
+            Campaigns
           </TabsTrigger>
         </TabsList>
 
@@ -945,6 +1047,104 @@ export default function BrandDetailPage() {
                 </CardContent>
               </Card>
             </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="campaigns" className="space-y-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold">Campaigns</h2>
+              <p className="text-muted-foreground">Create and manage your brand's campaigns</p>
+            </div>
+            <Button onClick={() => setCampaignDialogOpen(true)}>
+              + New Campaign
+            </Button>
+          </div>
+          <Dialog open={campaignDialogOpen} onOpenChange={setCampaignDialogOpen}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Create Campaign</DialogTitle>
+                <DialogDescription>Define a new campaign for your brand</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-3">
+                <Input placeholder="Name" value={newCampaign.name} onChange={e => setNewCampaign({ ...newCampaign, name: e.target.value })} />
+                <Input placeholder="Description" value={newCampaign.description} onChange={e => setNewCampaign({ ...newCampaign, description: e.target.value })} />
+                <Input placeholder="Type (e.g. product_launch)" value={newCampaign.campaign_type} onChange={e => setNewCampaign({ ...newCampaign, campaign_type: e.target.value })} />
+                <Input placeholder="Start Date (YYYY-MM-DD)" value={newCampaign.start_date} onChange={e => setNewCampaign({ ...newCampaign, start_date: e.target.value })} />
+                <Input placeholder="End Date (YYYY-MM-DD)" value={newCampaign.end_date} onChange={e => setNewCampaign({ ...newCampaign, end_date: e.target.value })} />
+                <Input placeholder="Target Platforms (comma separated)" value={newCampaign.target_platforms} onChange={e => setNewCampaign({ ...newCampaign, target_platforms: e.target.value })} />
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="any"
+                    placeholder="Engagement Rate (%)"
+                    value={metrics.engagement_rate}
+                    onChange={e => setMetrics({ ...metrics, engagement_rate: e.target.value })}
+                  />
+                  <Input
+                    type="number"
+                    min="0"
+                    step="any"
+                    placeholder="Conversion Rate (%)"
+                    value={metrics.conversion_rate}
+                    onChange={e => setMetrics({ ...metrics, conversion_rate: e.target.value })}
+                  />
+                  <Input
+                    type="number"
+                    min="0"
+                    step="any"
+                    placeholder="Reach"
+                    value={metrics.reach}
+                    onChange={e => setMetrics({ ...metrics, reach: e.target.value })}
+                  />
+                </div>
+                <Button onClick={handleCreateCampaign} disabled={creatingCampaign} className="w-full">
+                  {creatingCampaign ? "Creating..." : "Create"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <div className="space-y-4">
+            {campaigns.length === 0 ? (
+              <Card className="border-2 border-dashed border-muted-foreground/25 bg-muted/5">
+                <CardContent className="flex flex-col items-center justify-center py-16 text-center space-y-6">
+                  <Target className="w-10 h-10 text-violet-600" />
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-semibold">No campaigns yet</h3>
+                    <p className="text-muted-foreground max-w-md">
+                      Create a campaign to track and optimize your brand's marketing efforts.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {campaigns.map((campaign) => (
+                  <Card key={campaign.id} className="border-0 shadow-lg">
+                    <CardHeader>
+                      <CardTitle>{campaign.name}</CardTitle>
+                      <CardDescription>{campaign.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div><b>Type:</b> {campaign.campaign_type}</div>
+                      <div><b>Start:</b> {campaign.start_date}</div>
+                      <div><b>End:</b> {campaign.end_date}</div>
+                      <div><b>Platforms:</b> {Array.isArray(campaign.target_platforms) ? campaign.target_platforms.join(", ") : campaign.target_platforms}</div>
+                      <div><b>Metrics:</b> {campaign.target_metrics ? JSON.stringify(campaign.target_metrics) : "-"}</div>
+                      <Button
+                        className="mt-2"
+                        onClick={() => window.open(`/dashboard/generate?brand=${brandId}&campaign=${campaign.id}`, "_blank")}
+                        variant="outline"
+                        size="sm"
+                      >
+                        Generate Content
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </TabsContent>
       </Tabs>

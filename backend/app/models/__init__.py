@@ -1,4 +1,4 @@
-# Models package for SnapBrand.ai backend 
+# Models package for imagifyy.ai backend 
 from .database import Base, get_db
 from .user import User
 from .generated_image import GeneratedImage

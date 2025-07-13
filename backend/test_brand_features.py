@@ -28,7 +28,7 @@ def get_auth_headers():
             
         # Now login with seeded user
         response = client.post('/v1/auth/login', data={
-            'username': 'test@snapbrand.ai',
+            'username': 'test@imagifyy.ai',
             'password': 'password123'
         })
         if response.status_code == 200:

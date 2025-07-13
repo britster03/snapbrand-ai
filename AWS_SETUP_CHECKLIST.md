@@ -109,13 +109,13 @@ PRESIGN_EXPIRATION=3600
 MAX_FILE_SIZE_MB=10
 
 # Application Configuration
-APP_NAME=SnapBrand.ai Backend
+APP_NAME=imagifyy.ai Backend
 APP_VERSION=1.0.0
 DEBUG=false
 LOG_LEVEL=INFO
 
 # Security & CORS
-CORS_ORIGINS=["http://localhost:3000", "https://snapbrand.ai"]
+CORS_ORIGINS=["http://localhost:3000", "https://imagifyy.ai"]
 API_KEY_HEADER=X-API-Key
 API_KEYS=["your-api-key-1", "your-api-key-2"]
 

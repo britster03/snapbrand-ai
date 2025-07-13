@@ -67,7 +67,7 @@ export default function APIPage() {
   ]
 
   const codeExamples = {
-    curl: `curl -X POST https://api.snapbrand.ai/v1/generate \\
+    curl: `curl -X POST https://api.imagifyy.ai/v1/generate \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -76,7 +76,7 @@ export default function APIPage() {
     "style_intensity": 75,
     "high_resolution": true
   }'`,
-    javascript: `const response = await fetch('https://api.snapbrand.ai/v1/generate', {
+    javascript: `const response = await fetch('https://api.imagifyy.ai/v1/generate', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY',
@@ -94,7 +94,7 @@ const result = await response.json();
 console.log(result);`,
     python: `import requests
 
-url = "https://api.snapbrand.ai/v1/generate"
+url = "https://api.imagifyy.ai/v1/generate"
 headers = {
     "Authorization": "Bearer YOUR_API_KEY",
     "Content-Type": "application/json"
@@ -110,7 +110,7 @@ response = requests.post(url, headers=headers, json=data)
 result = response.json()
 print(result)`,
     php: `<?php
-$url = 'https://api.snapbrand.ai/v1/generate';
+$url = 'https://api.imagifyy.ai/v1/generate';
 $headers = [
     'Authorization: Bearer YOUR_API_KEY',
     'Content-Type: application/json'
@@ -216,7 +216,7 @@ print_r($result);
             <Card>
               <CardHeader>
                 <CardTitle>Getting Started</CardTitle>
-                <CardDescription>Quick start guide for the SnapBrand.ai API</CardDescription>
+                <CardDescription>Quick start guide for the imagifyy.ai API</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
@@ -253,11 +253,11 @@ print_r($result);
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between p-3 bg-gray-100 rounded-lg">
-                  <code className="text-sm">https://api.snapbrand.ai/v1</code>
+                  <code className="text-sm">https://api.imagifyy.ai/v1</code>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => copyToClipboard("https://api.snapbrand.ai/v1", "base-url")}
+                    onClick={() => copyToClipboard("https://api.imagifyy.ai/v1", "base-url")}
                   >
                     {copiedCode === "base-url" ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   </Button>
@@ -424,8 +424,8 @@ print_r($result);
                   <code>{`{
   "id": "img_1234567890",
   "status": "completed",
-  "url": "https://cdn.snapbrand.ai/images/generated/img_1234567890.png",
-  "thumbnail_url": "https://cdn.snapbrand.ai/images/thumbnails/img_1234567890.jpg",
+  "url": "https://cdn.imagifyy.ai/images/generated/img_1234567890.png",
+  "thumbnail_url": "https://cdn.imagifyy.ai/images/thumbnails/img_1234567890.jpg",
   "metadata": {
     "template": "product-hero",
     "prompt": "A modern smartphone on white background",

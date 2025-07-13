@@ -1,4 +1,4 @@
-# SnapBrand.ai - Professional AI Image Generation Platform
+# imagifyy.ai - Professional AI Image Generation Platform
 
 🚀 **Production-ready AI image generation system** built for hackathons and professional use cases. Generate high-quality, brand-consistent images using state-of-the-art diffusion models with professional standards and industry guidelines.
 
@@ -275,7 +275,7 @@ This project is specifically designed for hackathons with:
 - **Comprehensive Documentation**: Easy to understand and extend
 - **Modern Tech Stack**: Latest technologies and best practices
 
-## 🌟 Why SnapBrand.ai?
+## 🌟 Why imagifyy.ai?
 
 - **🎯 Purpose-Built**: Designed specifically for professional image generation
 - **🚀 Production-Ready**: Not just a demo, but a complete system

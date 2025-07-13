@@ -29,16 +29,19 @@ interface BrandAwareGenerateProps {
   onGenerate: (params: any) => void
   prompt: string
   setPrompt: (prompt: string) => void
+  setEnhancedPrompt?: (enhanced: string) => void
+  setSelectedBrandId?: (id: string) => void
+  setSelectedBrand?: (brand: BrandProfile | null) => void
 }
 
-export function BrandAwareGenerate({ onGenerate, prompt, setPrompt }: BrandAwareGenerateProps) {
+export function BrandAwareGenerate({ onGenerate, prompt, setPrompt, setEnhancedPrompt, setSelectedBrandId, setSelectedBrand }: BrandAwareGenerateProps) {
   const [brands, setBrands] = useState<BrandProfile[]>([])
-  const [selectedBrandId, setSelectedBrandId] = useState<string>("")
-  const [selectedBrand, setSelectedBrand] = useState<BrandProfile | null>(null)
+  const [selectedBrandId, setSelectedBrandIdState] = useState("")
+  const [selectedBrand, setSelectedBrandState] = useState<BrandProfile | null>(null)
   const [useBrandGuidelines, setUseBrandGuidelines] = useState(true)
   const [brandConsistencyCheck, setBrandConsistencyCheck] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [enhancedPrompt, setEnhancedPrompt] = useState("")
+  const [enhancedPrompt, setEnhancedPromptState] = useState("")
   const { toast } = useToast()
   const router = useRouter()
 
@@ -47,17 +50,32 @@ export function BrandAwareGenerate({ onGenerate, prompt, setPrompt }: BrandAware
   }, [])
 
   useEffect(() => {
-    if (selectedBrandId) {
+    if (selectedBrandId && selectedBrandId !== "none") {
       const brand = brands.find(b => b.id.toString() === selectedBrandId)
-      setSelectedBrand(brand || null)
+      setSelectedBrandState(brand || null)
       if (brand && prompt) {
         enhancePromptWithBrand(prompt, brand)
       }
     } else {
-      setSelectedBrand(null)
-      setEnhancedPrompt("")
+      setSelectedBrandState(null)
+      setEnhancedPromptState("")
     }
   }, [selectedBrandId, prompt])
+
+  // Whenever selectedBrandId changes, call setSelectedBrandId if provided
+  useEffect(() => {
+    if (setSelectedBrandId) setSelectedBrandId(selectedBrandId)
+  }, [selectedBrandId, setSelectedBrandId])
+
+  // Whenever selectedBrand changes, call setSelectedBrand if provided
+  useEffect(() => {
+    if (setSelectedBrand) setSelectedBrand(selectedBrand)
+  }, [selectedBrand, setSelectedBrand])
+
+  // Whenever enhancedPrompt changes, call setEnhancedPrompt if provided
+  useEffect(() => {
+    if (setEnhancedPrompt) setEnhancedPrompt(enhancedPrompt)
+  }, [enhancedPrompt, setEnhancedPrompt])
 
   const fetchBrands = async () => {
     try {
@@ -107,7 +125,7 @@ export function BrandAwareGenerate({ onGenerate, prompt, setPrompt }: BrandAware
 
   const enhancePromptWithBrand = async (basePrompt: string, brand: BrandProfile) => {
     if (!useBrandGuidelines) {
-      setEnhancedPrompt("")
+      setEnhancedPromptState("")
       return
     }
 
@@ -142,7 +160,7 @@ export function BrandAwareGenerate({ onGenerate, prompt, setPrompt }: BrandAware
       }
       
       const enhanced = `${basePrompt}, ${brandElements.join(", ")}`
-      setEnhancedPrompt(enhanced)
+      setEnhancedPromptState(enhanced)
     } catch (error) {
       console.error("Error enhancing prompt:", error)
       toast({
@@ -187,12 +205,12 @@ export function BrandAwareGenerate({ onGenerate, prompt, setPrompt }: BrandAware
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="brand-select">Brand Profile</Label>
-          <Select value={selectedBrandId} onValueChange={setSelectedBrandId}>
+          <Select value={selectedBrandId} onValueChange={setSelectedBrandIdState}>
             <SelectTrigger id="brand-select">
               <SelectValue placeholder="Select a brand profile (optional)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No brand profile</SelectItem>
+              <SelectItem value="none">No brand profile</SelectItem>
               {brands.map((brand) => (
                 <SelectItem key={brand.id} value={brand.id.toString()}>
                   <div className="flex items-center space-x-2">

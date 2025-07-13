@@ -9,11 +9,11 @@ const Footer: React.FC<{ className?: string }> = ({ className }) => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="inline-flex items-center space-x-2 mb-4" aria-label="SnapBrand.ai Home">
+            <Link href="/" className="inline-flex items-center space-x-2 mb-4" aria-label="imagifyy.ai Home">
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-blue-600" aria-hidden="true" />
               </div>
-              <span className="text-xl font-bold text-white">SnapBrand.ai</span>
+              <span className="text-xl font-bold text-white">imagifyy.ai</span>
             </Link>
             <p className="text-blue-100 mb-4 max-w-md">AI-powered brand asset studio to generate on-brand visuals at scale.</p>
             <nav className="flex space-x-4" aria-label="Social Media Links">
@@ -54,7 +54,7 @@ const Footer: React.FC<{ className?: string }> = ({ className }) => {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-blue-500/30 text-center text-blue-100 text-sm">
-          <p>© {new Date().getFullYear()} SnapBrand.ai. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} imagifyy.ai. All rights reserved.</p>
         </div>
       </div>
     </footer>

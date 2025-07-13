@@ -21,14 +21,14 @@ class Settings(BaseSettings):
     aws_session_token: Optional[str] = Field(None, env="AWS_SESSION_TOKEN")
 
     # Application Configuration
-    app_name: str = Field("SnapBrand.ai Backend", env="APP_NAME")
+    app_name: str = Field("imagifyy.ai Backend", env="APP_NAME")
     app_version: str = Field("0.1.0", env="APP_VERSION")
     debug: bool = Field(False, env="DEBUG")
     log_level: str = Field("INFO", env="LOG_LEVEL")
     
     # Security & CORS
     cors_origins: List[str] = Field(
-        ["http://localhost:3000", "https://snapbrand.ai"], 
+        ["http://localhost:3000", "https://imagifyy.ai"], 
         env="CORS_ORIGINS"
     )
     api_key_header: str = Field("X-API-Key", env="API_KEY_HEADER")

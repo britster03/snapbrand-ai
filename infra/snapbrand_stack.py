@@ -13,7 +13,7 @@ from constructs import Construct
 
 
 class SnapBrandStack(cdk.Stack):
-    """Infrastructure stack for SnapBrand.ai."""
+    """Infrastructure stack for imagifyy.ai."""
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs):  # type: ignore[override]
         super().__init__(scope, construct_id, **kwargs)

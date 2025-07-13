@@ -1,6 +1,6 @@
-# SnapBrand.ai Deployment Guide
+# imagifyy.ai Deployment Guide
 
-This guide covers deploying the complete SnapBrand.ai application, including the FastAPI backend and Next.js frontend.
+This guide covers deploying the complete imagifyy.ai application, including the FastAPI backend and Next.js frontend.
 
 ## Prerequisites
 
@@ -163,7 +163,7 @@ netlify deploy --prod --dir=out
 Create `.github/workflows/deploy.yml`:
 
 ```yaml
-name: Deploy SnapBrand.ai
+name: Deploy imagifyy.ai
 
 on:
   push:

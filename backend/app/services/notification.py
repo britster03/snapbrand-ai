@@ -23,7 +23,7 @@ class NotificationService:
         notification = {
             "type": "team_invite",
             "recipient": recipient_email,
-            "subject": f"You've been invited to join {brand_name} on SnapBrand.ai",
+            "subject": f"You've been invited to join {brand_name} on imagifyy.ai",
             "data": {
                 "brand_name": brand_name,
                 "inviter_name": inviter_name,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AWS CDK application entry point for SnapBrand.ai infrastructure."""
+"""AWS CDK application entry point for imagifyy.ai infrastructure."""
 
 import os
 

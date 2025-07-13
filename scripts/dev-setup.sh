@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# SnapBrand.ai Development Setup Script
+# imagifyy.ai Development Setup Script
 
 set -e
 
-echo "🚀 Setting up SnapBrand.ai development environment..."
+echo "🚀 Setting up imagifyy.ai development environment..."
 
 # Colors for output
 RED='\033[0;31m'

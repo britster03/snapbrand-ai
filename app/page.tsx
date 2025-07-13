@@ -27,7 +27,7 @@ export default function LandingPage() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              SnapBrand.ai
+              imagifyy.ai
             </span>
           </div>
           <nav className="hidden md:flex items-center space-x-8">
@@ -90,7 +90,7 @@ export default function LandingPage() {
               <div className="bg-white rounded-xl p-8">
                 <Image
                   src="/placeholder.svg?height=600&width=1000"
-                  alt="SnapBrand.ai Dashboard Preview"
+                  alt="imagifyy.ai Dashboard Preview"
                   width={1000}
                   height={600}
                   className="rounded-lg shadow-2xl"
@@ -319,7 +319,7 @@ export default function LandingPage() {
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Brand Visuals?</h2>
           <p className="text-xl text-gray-300 mb-8">
-            Join hundreds of brands already creating stunning, on-brand content with SnapBrand.ai
+            Join hundreds of brands already creating stunning, on-brand content with imagifyy.ai
           </p>
           <Button size="lg" className="text-lg px-8 py-6 bg-blue-600 hover:bg-blue-700" asChild>
             <Link href="/dashboard">
@@ -328,103 +328,6 @@ export default function LandingPage() {
           </Button>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-white border-t py-12 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  SnapBrand.ai
-                </span>
-              </div>
-              <p className="text-gray-600">AI-powered brand asset generation for modern businesses.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    API
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Templates
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Support</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Documentation
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Status
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-gray-900">
-                    Privacy
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2024 SnapBrand.ai. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

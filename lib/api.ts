@@ -1,4 +1,4 @@
-// API client for SnapBrand.ai backend
+// API client for imagifyy.ai backend
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
   (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000').replace('3000', '8000');

@@ -13,7 +13,7 @@ print("=== TESTING AUTH FIX ===")
 # Test 1: Login and get token
 print("\n1. Login and get token...")
 response = client.post('/v1/auth/login', data={
-    'username': 'test@snapbrand.ai',
+    'username': 'test@imagifyy.ai',
     'password': 'password123'
 })
 

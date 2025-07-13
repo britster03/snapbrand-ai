@@ -159,7 +159,7 @@ export default function Dashboard() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                SnapBrand.ai
+                imagifyy.ai
               </span>
             </Link>
             <Badge variant="secondary" className="bg-green-100 text-green-700">
@@ -227,6 +227,18 @@ export default function Dashboard() {
                   <Link href="/dashboard/brand-assets">
                     <Palette className="w-4 h-4 mr-2" />
                     Brand Assets
+                  </Link>
+                </Button>
+              </li>
+              <li>
+                <Button
+                  variant={activeTab === "brands" ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  asChild
+                >
+                  <Link href="/dashboard/brands">
+                    <Palette className="w-4 h-4 mr-2" />
+                    Brands
                   </Link>
                 </Button>
               </li>

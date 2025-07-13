@@ -241,7 +241,7 @@ class AuthManager {
 /*
 // Login
 try {
-  const { token, user } = await authManager.login('test@snapbrand.ai', 'password123');
+  const { token, user } = await authManager.login('test@imagifyy.ai', 'password123');
   console.log('Login successful:', user);
 } catch (error) {
   console.error('Login failed:', error.message);

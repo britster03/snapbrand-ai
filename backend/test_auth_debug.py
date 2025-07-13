@@ -15,7 +15,7 @@ print("=== AUTHENTICATION DEBUG TEST ===")
 # Login and get token
 print("\n1. Login with test user...")
 response = client.post('/v1/auth/login', data={
-    'username': 'test@snapbrand.ai',
+    'username': 'test@imagifyy.ai',
     'password': 'password123'
 })
 

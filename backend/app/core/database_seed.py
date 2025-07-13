@@ -97,7 +97,7 @@ def create_test_user(db: Session):
     """Create a test user for development."""
     
     # Check if test user already exists
-    existing_user = db.query(User).filter(User.email == "test@snapbrand.ai").first()
+    existing_user = db.query(User).filter(User.email == "test@imagifyy.ai").first()
     if existing_user:
         print("Test user already exists")
         return existing_user
@@ -105,7 +105,7 @@ def create_test_user(db: Session):
     # Create test user
     test_user = User(
         id="user_test001",
-        email="test@snapbrand.ai",
+        email="test@imagifyy.ai",
         username="testuser",
         hashed_password=get_password_hash("password123"),
         full_name="Test User",

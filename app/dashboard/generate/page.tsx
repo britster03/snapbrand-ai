@@ -32,12 +32,15 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronUp,
-  Star
+  Star,
+  Target
 } from "lucide-react"
 import { toast } from "sonner"
 import Image from "next/image"
 import Link from "next/link"
 import { ProtectedRoute } from "@/components/protected-route"
+import { BrandAwareGenerate } from "@/components/brand-aware-generate"
+import { useSearchParams } from "next/navigation"
 
 import { 
   apiClient, 
@@ -45,6 +48,7 @@ import {
   type GeneratedImage, 
   type Template 
 } from "@/lib/api"
+import { AuthUtils } from "@/lib/auth-utils"
 
 // Detailed option explanations
 const qualityOptions = {
@@ -290,11 +294,38 @@ export default function GeneratePage() {
   const [processingTime, setProcessingTime] = useState<number>(0)
   const [totalCost, setTotalCost] = useState<number>(0)
 
+  const [enhancedPrompt, setEnhancedPrompt] = useState("")
+  const [selectedBrandId, setSelectedBrandId] = useState<string>("")
+  const [selectedBrand, setSelectedBrand] = useState<any>(null)
+
+  const searchParams = useSearchParams()
+  const campaignIdFromQuery = searchParams?.get("campaign")
+  const [campaign, setCampaign] = useState<any>(null)
+
   // Load templates on component mount
   useEffect(() => {
     loadTemplates()
     loadCategories()
   }, [])
+
+  // Fetch campaign details if campaignIdFromQuery is present
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      if (!campaignIdFromQuery) return
+      try {
+        const token = AuthUtils.getToken && AuthUtils.getToken()
+        if (!token) return
+        const headers = { Authorization: `Bearer ${token}` }
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/brands/profiles/${selectedBrandId}/campaigns`, { headers })
+        if (response.ok) {
+          const data = await response.json()
+          const found = data.find((c: any) => String(c.id) === String(campaignIdFromQuery))
+          if (found) setCampaign(found)
+        }
+      } catch (e) { /* ignore */ }
+    }
+    fetchCampaign()
+  }, [campaignIdFromQuery, selectedBrandId])
 
   const loadTemplates = async () => {
     try {
@@ -373,7 +404,7 @@ export default function GeneratePage() {
   }
 
   const generateImages = async () => {
-    if (!prompt.trim()) {
+    if (!(enhancedPrompt || prompt).trim()) {
       toast.error("Please enter a prompt")
       return
     }
@@ -392,19 +423,26 @@ export default function GeneratePage() {
       } : undefined
 
       const request: GenerateRequest = {
-        prompt: buildBrandStylePrompt(prompt.trim()),
+        prompt: (enhancedPrompt || prompt).trim(),
         negative_prompt: negativePrompt.trim() || undefined,
         num_images: numImages,
         size,
         guidance_scale: guidanceScale,
         seed: seed || undefined,
         template_id: selectedTemplate?.id,
-        brand_style: brandStyleData,
+        brand_style: selectedBrand ? {
+          name: selectedBrand.name,
+          industry: selectedBrand.industry,
+          visual_style: selectedBrand.visual_style,
+          primary_colors: selectedBrand.primary_colors,
+        } : undefined,
         // Professional quality parameters (these will be processed by the backend)
         quality: imageQuality,
         style: imageStyle,
         composition: compositionRule !== "none" ? compositionRule : undefined,
-        lighting: lightingPreset
+        lighting: lightingPreset,
+        // Add campaign_id if present
+        ...(campaign ? { campaign_id: campaign.id } : {})
       }
 
       const startTime = Date.now()
@@ -475,7 +513,7 @@ export default function GeneratePage() {
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  SnapBrand.ai
+                  imagifyy.ai
                 </span>
               </Link>
               <Badge variant="secondary" className="bg-green-100 text-green-700">
@@ -921,6 +959,20 @@ export default function GeneratePage() {
           {/* Main Content */}
           <main className="flex-1 p-6">
             <div className="max-w-4xl mx-auto space-y-6">
+              {/* Brand-Aware Prompt Enhancement */}
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <BrandAwareGenerate
+                    prompt={prompt}
+                    setPrompt={setPrompt}
+                    onGenerate={() => {}}
+                    // Custom handlers to sync state
+                    setEnhancedPrompt={setEnhancedPrompt}
+                    setSelectedBrandId={setSelectedBrandId}
+                    setSelectedBrand={setSelectedBrand}
+                  />
+                </CardContent>
+              </Card>
               {/* Generation Form */}
               <Card>
                 <CardHeader>
@@ -1110,6 +1162,20 @@ export default function GeneratePage() {
                         <div className="text-xs text-gray-500">
                           This may take a few moments
                         </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              {campaign && (
+                <Card className="mb-6 border-indigo-300 bg-indigo-50">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-4">
+                      <Target className="w-6 h-6 text-indigo-600" />
+                      <div>
+                        <div className="font-semibold text-indigo-800">Generating for Campaign:</div>
+                        <div className="text-indigo-700">{campaign.name}</div>
+                        <div className="text-xs text-indigo-600">{campaign.description}</div>
                       </div>
                     </div>
                   </CardContent>

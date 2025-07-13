@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# SnapBrand.ai Production Startup Script
+# imagifyy.ai Production Startup Script
 # This script handles the complete startup process for both development and production environments
 
 set -e  # Exit on any error
@@ -320,7 +320,7 @@ show_status() {
 
 # Function to show help
 show_help() {
-    echo "SnapBrand.ai Startup Script"
+    echo "imagifyy.ai Startup Script"
     echo ""
     echo "Usage: $0 [COMMAND]"
     echo ""
@@ -354,7 +354,7 @@ main() {
     
     case $command in
         start)
-            print_status "Starting SnapBrand.ai application..."
+            print_status "Starting imagifyy.ai application..."
             check_env_vars
             setup_backend
             setup_frontend

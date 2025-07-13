@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Production Validation Script for SnapBrand.ai Backend
+Production Validation Script for imagifyy.ai Backend
 
 This script validates that the backend is truly production-ready with:
 - No dummy or placeholder data
@@ -234,7 +234,7 @@ class ProductionValidator:
     
     def run_validation(self) -> Dict[str, Any]:
         """Run complete validation suite."""
-        print("🚀 Starting Production Validation for SnapBrand.ai Backend\n")
+        print("🚀 Starting Production Validation for imagifyy.ai Backend\n")
         
         # Run all validations
         self.validate_configuration()
