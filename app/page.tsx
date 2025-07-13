@@ -64,7 +64,7 @@ export default function LandingPage() {
             </div>
             <div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                SnapBrand.ai
+                imagifyy.ai
               </span>
               <div className="text-xs text-gray-500 font-medium">Professional AI Image Generation</div>
             </div>
@@ -191,7 +191,7 @@ export default function LandingPage() {
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Watch how SnapBrand.ai transforms your brand assets into stunning, professional-quality images
+              Watch how imagifyy.ai transforms your brand assets into stunning, professional-quality images
             </p>
           </div>
 
@@ -390,7 +390,7 @@ export default function LandingPage() {
               Simple Process
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent">
-              How SnapBrand.ai Works
+              How imagifyy.ai Works
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               From brand asset upload to professional image generation—here's how our AI transforms your brand into unlimited visual content
@@ -507,7 +507,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <p className="text-sm text-gray-400">
-              © 2024 SnapBrand.ai. All rights reserved. Built with <Heart className="w-4 h-4 mx-1 text-red-500 inline" /> for professional image generation.
+              © 2024 imagifyy.ai. All rights reserved. Built with <Heart className="w-4 h-4 mx-1 text-red-500 inline" /> for professional image generation.
             </p>
           </div>
         </div>

@@ -27,11 +27,17 @@ import {
   Info,
   HelpCircle,
   ArrowLeft,
-  FileImage
+  FileImage,
+  LogOut,
+  User
 } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
 import { ProtectedRoute } from "@/components/protected-route"
+import { LoadingIndicator } from "@/components/ui/loading-indicator"
+import { useAuth } from "@/components/auth-context"
+import { useRouter } from "next/navigation"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 import { 
   apiClient, 
@@ -81,6 +87,9 @@ const vectorSizes = {
 }
 
 export default function VectorGeneratePage() {
+  const router = useRouter()
+  const { user, logout } = useAuth()
+  
   const [prompt, setPrompt] = useState("")
   const [negativePrompt, setNegativePrompt] = useState("")
   const [numImages, setNumImages] = useState(1)
@@ -178,6 +187,12 @@ export default function VectorGeneratePage() {
     setGeneratedVectors([])
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push("/login")
+    toast.success("Logged out successfully")
+  }
+
   const renderVector = (vector: GeneratedVector) => {
     let svgContent = ''
     
@@ -224,6 +239,20 @@ export default function VectorGeneratePage() {
               <Badge variant="secondary" className="bg-purple-100 text-purple-700">
                 Vector AI
               </Badge>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span className="hidden sm:inline">{user?.username || "User"}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
@@ -403,15 +432,26 @@ export default function VectorGeneratePage() {
 
             {/* Results */}
             <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Generated Vectors</CardTitle>
-                  <CardDescription>
-                    Your AI-generated vector images will appear here
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {generatedVectors.length > 0 ? (
+              {/* Loading Animation */}
+              <LoadingIndicator 
+                isLoading={isGenerating} 
+                numImages={numImages} 
+                prompt={prompt}
+                onComplete={() => {
+                  console.log("Vector generation animation completed")
+                }}
+              />
+              
+              {!isGenerating && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Generated Vectors</CardTitle>
+                    <CardDescription>
+                      Your AI-generated vector images will appear here
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {generatedVectors.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {generatedVectors.map((vector, index) => (
                         <div key={vector.id} className="space-y-4">
@@ -470,6 +510,7 @@ export default function VectorGeneratePage() {
                   )}
                 </CardContent>
               </Card>
+              )}
             </div>
           </div>
         </div>

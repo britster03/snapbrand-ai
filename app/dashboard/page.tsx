@@ -22,6 +22,8 @@ import {
   MoreHorizontal,
   Loader2,
   X,
+  LogOut,
+  User,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -31,6 +33,7 @@ import { useAuth } from "@/components/auth-context"
 import { apiClient, type GeneratedImage, type BatchStatusResponse } from "@/lib/api"
 import { toast } from "sonner"
 import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation"
 
 interface UserStats {
   total_images: number
@@ -51,8 +54,9 @@ export default function Dashboard() {
   const [recentImages, setRecentImages] = useState<GeneratedImage[]>([])
   const [recentBatches, setRecentBatches] = useState<BatchStatusResponse[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [isViewingImage, setIsViewingImage] = useState<GeneratedImage | null>(null)
+  const router = useRouter()
 
   // Load dashboard data
   useEffect(() => {
@@ -147,6 +151,12 @@ export default function Dashboard() {
     setIsViewingImage(image)
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push("/login")
+    toast.success("Logged out successfully")
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
@@ -177,6 +187,20 @@ export default function Dashboard() {
                 Generate Images
               </Link>
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span className="hidden sm:inline">{user?.username || "User"}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>

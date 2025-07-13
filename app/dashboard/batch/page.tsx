@@ -20,12 +20,18 @@ import {
   Loader2,
   Trash2,
   Plus,
-  X
+  X,
+  LogOut,
+  User
 } from "lucide-react"
 import { toast } from "sonner"
 import Image from "next/image"
 import Link from "next/link"
 import { ProtectedRoute } from "@/components/protected-route"
+import { LoadingIndicator } from "@/components/ui/loading-indicator"
+import { useAuth } from "@/components/auth-context"
+import { useRouter } from "next/navigation"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 import { 
   apiClient, 
@@ -45,6 +51,9 @@ interface BatchRequest {
 }
 
 export default function BatchPage() {
+  const router = useRouter()
+  const { user, logout } = useAuth()
+  
   const [requests, setRequests] = useState<BatchRequest[]>([
     {
       id: "1",
@@ -212,6 +221,12 @@ export default function BatchPage() {
     }
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push("/login")
+    toast.success("Logged out successfully")
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
@@ -242,6 +257,20 @@ export default function BatchPage() {
                   Single Generate
                 </Link>
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span className="hidden sm:inline">{user?.username || "User"}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
@@ -366,6 +395,16 @@ export default function BatchPage() {
                   </Button>
                 </CardContent>
               </Card>
+
+              {/* Batch Creation Loading */}
+              <LoadingIndicator 
+                isLoading={isCreating} 
+                numImages={requests.filter(req => req.prompt.trim()).reduce((sum, req) => sum + req.num_images, 0)} 
+                prompt={`Batch processing ${requests.filter(req => req.prompt.trim()).length} requests`}
+                onComplete={() => {
+                  console.log("Batch creation animation completed")
+                }}
+              />
 
               {/* Batch Jobs List */}
               {batchJobs.length > 0 && (

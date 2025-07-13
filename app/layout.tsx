@@ -4,12 +4,11 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from '@/components/auth-context'
 import { Toaster } from '@/components/ui/toaster'
-import { ConditionalFooter } from '@/components/conditional-footer'
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "SnapBrand.ai - AI-Powered Brand Asset Studio",
+  title: "imagifyy.ai - AI-Powered Brand Asset Studio",
   description: "Generate on-brand visuals at scale with AI. No photographer or designer needed.",
     generator: 'v0.dev'
 }
@@ -24,7 +23,6 @@ export default function RootLayout({
       <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>
           {children}
-          <ConditionalFooter />
           <Toaster />
         </AuthProvider>
       </body>

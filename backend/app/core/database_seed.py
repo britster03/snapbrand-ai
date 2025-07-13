@@ -96,15 +96,18 @@ def seed_templates(db: Session):
 def create_test_user(db: Session):
     """Create a test user for development."""
     
-    # Check if test user already exists
-    existing_user = db.query(User).filter(User.email == "test@imagifyy.ai").first()
+    # Check if test user already exists by email or username
+    existing_user = db.query(User).filter(
+        (User.email == "test@imagifyy.ai") | (User.username == "testuser")
+    ).first()
     if existing_user:
-        print("Test user already exists")
+        print(f"Test user already exists: {existing_user.email}")
         return existing_user
     
-    # Create test user
+    # Create test user with unique ID
+    import uuid
     test_user = User(
-        id="user_test001",
+        id=f"user_{uuid.uuid4().hex[:8]}",
         email="test@imagifyy.ai",
         username="testuser",
         hashed_password=get_password_hash("password123"),
@@ -131,14 +134,25 @@ def seed_database():
     
     try:
         print("Seeding database...")
-        seed_templates(db)
-        create_test_user(db)
+        
+        # Seed templates
+        try:
+            seed_templates(db)
+        except Exception as e:
+            print(f"Warning: Template seeding failed: {e}")
+        
+        # Create test user
+        try:
+            create_test_user(db)
+        except Exception as e:
+            print(f"Warning: Test user creation failed: {e}")
+        
         print("Database seeding completed!")
         
     except Exception as e:
         print(f"Error seeding database: {e}")
         db.rollback()
-        raise
+        # Don't raise the exception, just log it
     finally:
         db.close()
 

@@ -33,14 +33,18 @@ import {
   ChevronDown,
   ChevronUp,
   Star,
-  Target
+  Target,
+  LogOut,
+  User
 } from "lucide-react"
 import { toast } from "sonner"
 import Image from "next/image"
 import Link from "next/link"
 import { ProtectedRoute } from "@/components/protected-route"
 import { BrandAwareGenerate } from "@/components/brand-aware-generate"
-import { useSearchParams } from "next/navigation"
+import { LoadingIndicator } from "@/components/ui/loading-indicator"
+import { useSearchParams, useRouter } from "next/navigation"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 import { 
   apiClient, 
@@ -49,6 +53,7 @@ import {
   type Template 
 } from "@/lib/api"
 import { AuthUtils } from "@/lib/auth-utils"
+import { useAuth } from "@/components/auth-context"
 
 // Detailed option explanations
 const qualityOptions = {
@@ -264,6 +269,9 @@ const OptionExplanation = ({
 )
 
 export default function GeneratePage() {
+  const router = useRouter()
+  const { user, logout } = useAuth()
+  
   const [templates, setTemplates] = useState<Template[]>([])
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
   const [categories, setCategories] = useState<string[]>([])
@@ -501,6 +509,12 @@ export default function GeneratePage() {
     setGeneratedImages([])
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push("/login")
+    toast.success("Logged out successfully")
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50" suppressHydrationWarning>
@@ -531,6 +545,20 @@ export default function GeneratePage() {
                   Batch Generate
                 </Link>
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span className="hidden sm:inline">{user?.username || "User"}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
@@ -1151,22 +1179,16 @@ export default function GeneratePage() {
                 </Card>
               )}
 
-              {/* Generation Status */}
-              {isGenerating && (
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
-                      <div className="flex-1">
-                        <div className="text-sm font-medium">Generating images...</div>
-                        <div className="text-xs text-gray-500">
-                          This may take a few moments
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+              {/* Generation Status with Beautiful Loading Animation */}
+              <LoadingIndicator 
+                isLoading={isGenerating} 
+                numImages={numImages} 
+                prompt={enhancedPrompt || prompt}
+                onComplete={() => {
+                  // Optional: Add any completion logic here
+                  console.log("Generation animation completed")
+                }}
+              />
               {campaign && (
                 <Card className="mb-6 border-indigo-300 bg-indigo-50">
                   <CardContent className="p-4">
