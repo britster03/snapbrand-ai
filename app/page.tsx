@@ -77,19 +77,14 @@ export default function LandingPage() {
             <Link href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
               How It Works
             </Link>
-            <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
-              Dashboard
+            <Link href="#demo-showcase" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+              See It In Action
             </Link>
           </nav>
           
           <div className="flex items-center space-x-4">
             <Button variant="ghost" className="hidden md:flex hover:bg-blue-50 transition-colors duration-300" asChild>
               <Link href="/login">Sign In</Link>
-            </Button>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl" asChild>
-              <Link href="/dashboard">
-                Get Started <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
             </Button>
             <Button
               variant="ghost"
@@ -112,8 +107,8 @@ export default function LandingPage() {
               <Link href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
                 How It Works
               </Link>
-              <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
-                Dashboard
+              <Link href="#demo-showcase" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
+                See It In Action
               </Link>
               <Separator />
               <Link href="/login" className="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">
@@ -152,18 +147,6 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-in fade-in-50 slide-in-from-bottom-10 duration-1000 delay-400">
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl group" 
-                asChild
-              >
-                <Link href="/dashboard" className="flex items-center">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-lg mr-3">
-                    <Play className="w-4 h-4 text-blue-600" />
-                  </span>
-                  Start Creating Free
-                </Link>
-              </Button>
-              <Button 
-                size="lg" 
                 variant="outline" 
                 className="text-lg px-8 py-6 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 hover:scale-105 group"
               >
@@ -176,7 +159,7 @@ export default function LandingPage() {
       </section>
 
       {/* Demo Showcase Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50/30">
+      <section id="demo-showcase" className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50/30">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <Badge variant="secondary" className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200">
@@ -196,35 +179,59 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Demo Placeholder 1 */}
+            {/* Demo Placeholder 1 - Video/Image Support */}
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  {/* Placeholder for video/image - Replace with your content */}
+                  <div className="text-center space-y-2">
+                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
+                    <p className="text-sm text-gray-500">Video/Image Placeholder 1</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Demo Placeholder 2 */}
+            {/* Demo Placeholder 2 - Video/Image Support */}
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  {/* Placeholder for video/image - Replace with your content */}
+                  <div className="text-center space-y-2">
+                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
+                    <p className="text-sm text-gray-500">Video/Image Placeholder 2</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Demo Placeholder 3 */}
+            {/* Demo Placeholder 3 - Video/Image Support */}
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  {/* Placeholder for video/image - Replace with your content */}
+                  <div className="text-center space-y-2">
+                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
+                    <p className="text-sm text-gray-500">Video/Image Placeholder 3</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Demo Placeholder 4 */}
+            {/* Demo Placeholder 4 - Video/Image Support */}
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-red-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-all duration-500">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  {/* Placeholder for video/image - Replace with your content */}
+                  <div className="text-center space-y-2">
+                    <Play className="w-12 h-12 text-gray-400 mx-auto" />
+                    <p className="text-sm text-gray-500">Video/Image Placeholder 4</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -480,16 +487,6 @@ export default function LandingPage() {
             Join hundreds of businesses creating professional, on-brand content with AI
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6 bg-white text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl" 
-              asChild
-            >
-              <Link href="/dashboard">
-                <Play className="w-5 h-5 mr-2" />
-                Start Creating Free
-              </Link>
-            </Button>
             <Button 
               size="lg" 
               variant="outline" 
